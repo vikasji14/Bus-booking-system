@@ -10,7 +10,7 @@ function Bus({ bus }) {
       <div className="max-w-full bg-white flex flex-col rounded overflow-hidden shadow-lg">
         <div className="flex flex-row items-baseline flex-nowrap bg-gray-100 p-2">
           <img className="h-10 w-10 rounded-full mr-4" src={logo} alt="Logo" />
-          <h1 className="ml-2 uppercase font-bold">Journey Date</h1>
+          <h1 className="ml-2 uppercase font-bold">Date: </h1>
           <p className="ml-2 font-base text-gray-500">{bus.journeyDate}</p>
         </div>
         <div className="mt-2 flex justify-start bg-white p-2"></div>

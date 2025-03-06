@@ -152,6 +152,21 @@ const GetBusById = async (req, res) => {
   }
 };
 
+// all bus list
+const allBusList = async (req, res) => {
+  try {
+    const buses = await Bus.find();
+    res.status(200).json({
+      message: "Buses fetched successfully",
+      success: true,
+      data: buses,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message:"error" });
+  }
+};
+
+
 module.exports = {
   AddBus,
   GetAllBuses,
@@ -159,4 +174,5 @@ module.exports = {
   DeleteBus,
   GetBusById,
   GetBusesByFromAndTo,
+  allBusList,
 };
