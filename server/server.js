@@ -8,10 +8,13 @@ const bodyParser = require("body-parser");
 
 app.use(
   cors({
-    origin: true, // ✅ Jo bhi request karega, uska origin allow hoga
-    credentials: true, // ✅ Cookies/tokens ke liye
+    origin: "https://bus-booking-system-1bk7.vercel.app", // ✅ Specific frontend URL allow
+    credentials: true, // ✅ Cookies/tokens ke liye allow
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.json());
 app.use(bodyParser.json());
 
