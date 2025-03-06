@@ -15,6 +15,8 @@ app.use(cors({
   credentials: true, // Enable if you're using cookies or authentication
 }));
 
+app.options("*", cors());
+
 app.use(express.json());
 app.use(bodyParser.json());
 
