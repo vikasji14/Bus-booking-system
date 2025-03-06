@@ -12,7 +12,16 @@ function Login() {
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values );
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // ✅ Only if backend uses cookies
+        }
+
+
+       );
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
