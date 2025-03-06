@@ -19,7 +19,7 @@ function Home() {
     const journeyDate = filters.journeyDate;
     try {
       const { data } = await axiosInstance.post(
-        `/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
+        `${process.env.REACT_APP_SERVER_URL}/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
       );
       setBuses(data.data);
       dispatch(HideLoading());
@@ -30,7 +30,7 @@ function Home() {
   }, [filters, dispatch]);
 
   useEffect(() => {
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
+    axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
       setCities(response.data.data);
     });
   }, []);

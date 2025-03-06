@@ -15,7 +15,7 @@ function AdminBookings() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.get(
-        `/api/bookings/get-all-bookings`,
+        `${process.env.REACT_APP_SERVER_URL}/api/bookings/get-all-bookings`,
         {}
       );
       dispatch(HideLoading());

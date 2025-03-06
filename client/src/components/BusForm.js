@@ -20,10 +20,10 @@ function BusForm({
       dispatch(ShowLoading());
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post("/api/buses/add-bus", values);
+        response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/buses/add-bus`, values);
       } else {
         response = await axiosInstance.put(
-          `/api/buses/${selectedBus._id}`,
+          `${process.env.REACT_APP_SERVER_URL}/api/buses/${selectedBus._id}`,
           values
         );
       }
@@ -43,7 +43,7 @@ function BusForm({
   };
 
   useEffect(() => {
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
+    axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
       setCities(response.data.data);
     });
   }, []);

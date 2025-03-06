@@ -5,14 +5,18 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/alertsSlice";
 import { Helmet } from "react-helmet";
+import config from '../config';
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const serverUrl = config.serverUrl;
+  console.log("server url", serverUrl);
+
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/auth/login", values);
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values);
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);

@@ -17,7 +17,7 @@ function ProtectedRoute({ children }) {
       dispatch(ShowLoading());
 
       const response = await axios.get(
-        `/api/users/${user_id} `,
+        `${process.env.REACT_APP_SERVER_URL}/api/users/${user_id} `,
         {},
         {
           headers: {

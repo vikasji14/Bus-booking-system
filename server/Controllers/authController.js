@@ -30,6 +30,7 @@ transporter.verify((error, success) => {
 const CreateUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
+    console.log(existingUser);
     if (existingUser) {
       return res.send({
         message: "User already exists",

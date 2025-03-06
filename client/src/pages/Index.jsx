@@ -21,7 +21,7 @@ function Index() {
     const journeyDate = filters.journeyDate;
     try {
       const { data } = await axiosInstance.post(
-        `/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
+        `${process.env.REACT_APP_SERVER_URL}/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
       );
 
       setBuses(data.data);
@@ -33,7 +33,7 @@ function Index() {
   }, [filters, dispatch]);
 
   useEffect(() => {
-    axiosInstance.get("/api/cities/get-all-cities").then((response) => {
+    axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
       setCities(response.data.data);
     });
   }, []);
@@ -47,7 +47,7 @@ function Index() {
   return (
     <>
       <Helmet>
-        <title>Easy-Booking</title>
+        <title>Bus Booking</title>
       </Helmet>
       <div className="h-screen flex bg-gray-900">
         <div
@@ -86,11 +86,10 @@ function Index() {
             </div>
 
             <h1 className="mb-5 text-5xl text-white font-bold ">
-              Easy-Booking
+              Bus Booking
             </h1>
             <p className="mb-5 text-xl text-white">
-              is a platform that allows you to book your bus tickets online and
-              in a very easy way.
+            Skip the queue, book online! Your journey begins with a click – secure seats, best prices, and stress-free travel.
             </p>
             <Link
               to="/login"
@@ -105,7 +104,7 @@ function Index() {
               </span>
               <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
             </Link>
-            <div className="w-full my-5 mx-2 p-2 px-2 py-3 flex justify-center">
+            <div className="w-full text-black my-5 mx-2 p-2 px-2 py-3 flex justify-center">
               <Row gutter={10} align="center">
                 <Col lg={12} sm={24}>
                   <select

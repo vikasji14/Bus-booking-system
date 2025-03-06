@@ -19,7 +19,7 @@ function BookNow() {
   const getBus = useCallback(async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.get(`/api/buses/${params.id}`);
+      const response = await axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/buses/${params.id}`);
       dispatch(HideLoading());
       if (response.data.success) {
         setBus(response.data.data);
@@ -36,7 +36,7 @@ function BookNow() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.post(
-        `/api/bookings/book-seat/${localStorage.getItem("user_id")}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/bookings/book-seat/${localStorage.getItem("user_id")}`,
         {
           bus: bus._id,
           seats: selectedSeats,
@@ -59,7 +59,7 @@ function BookNow() {
   const onToken = async (token) => {
     try {
       dispatch(ShowLoading());
-      const response = await axiosInstance.post("/api/bookings/make-payment", {
+      const response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/make-payment`, {
         token,
         amount: selectedSeats.length * bus.price,
       });

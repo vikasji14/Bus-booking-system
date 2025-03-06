@@ -20,7 +20,7 @@ function Bookings() {
     try {
       dispatch(ShowLoading());
       const response = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/bookings/${localStorage.getItem("user_id")}`,
         {}
       );
       dispatch(HideLoading());
@@ -47,13 +47,13 @@ function Bookings() {
     try {
       dispatch(ShowLoading());
       const res = await axiosInstance.get(
-        `/api/bookings/${localStorage.getItem("user_id")}`
+        `${process.env.REACT_APP_SERVER_URL}/api/bookings/${localStorage.getItem("user_id")}`
       );
       const bus_id = res.data.data[0].bus._id;
       const user_id = res.data.data[0].user._id;
       const booking_id = res.data.data[0]._id;
       const response = await axiosInstance.delete(
-        `/api/bookings/${booking_id}/${user_id}/${bus_id}`,
+        `${process.env.REACT_APP_SERVER_URL}/api/bookings/${booking_id}/${user_id}/${bus_id}`,
         {}
       );
       dispatch(HideLoading());
