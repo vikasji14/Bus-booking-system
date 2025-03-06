@@ -10,9 +10,6 @@ import config from '../config';
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const serverUrl = config.serverUrl;
-  console.log("server url", serverUrl);
-
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());

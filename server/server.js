@@ -7,7 +7,7 @@ const dbConfig = require("./config/dbConfig");
 const bodyParser = require("body-parser");
 
 app.use(cors({
-  origin: "*",  // Allow all origins
+  origin: "https://bus-booking-system-beige.vercel.app",  // Allow all origins
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // Allow all methods
   allowedHeaders: ["Content-Type", "Authorization"] // Allow these headers
 }));
