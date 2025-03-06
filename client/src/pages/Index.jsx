@@ -38,11 +38,22 @@ function Index() {
       setCities(response.data.data);
     });
   }, []);
-  useEffect(async () => {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/buses/1/allbuses`)
-    setAllBuses(response.data.data);
-    console.log("All Buses:", response.data.data);
+  useEffect(() => {
+    const fetchBuses = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/buses/1/allbuses`
+        );
+        setAllBuses(response.data.data);
+        console.log("All Buses:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching buses:", error);
+      }
+    };
+
+    fetchBuses();
   }, []);
+  
   useCallback(() => {
     if (filters.from && filters.to && filters.journeyDate) {
       getBusesByFilter();
