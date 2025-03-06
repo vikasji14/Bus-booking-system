@@ -6,7 +6,12 @@ const port = process.env.PORT || 5000;
 const dbConfig = require("./config/dbConfig");
 const bodyParser = require("body-parser");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true, // ✅ Jo bhi request karega, uska origin allow hoga
+    credentials: true, // ✅ Cookies/tokens ke liye
+  })
+);
 app.use(express.json());
 app.use(bodyParser.json());
 
