@@ -20,7 +20,7 @@ function BusForm({
       dispatch(ShowLoading());
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/buses/add-bus`, values);
+        response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/buses/add-bus`, values, { withCredentials: true } );
       } else {
         response = await axiosInstance.put(
           `${process.env.REACT_APP_SERVER_URL}/api/buses/${selectedBus._id}`,

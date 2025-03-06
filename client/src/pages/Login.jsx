@@ -12,7 +12,7 @@ function Login() {
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values);
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values, { withCredentials: true } );
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);

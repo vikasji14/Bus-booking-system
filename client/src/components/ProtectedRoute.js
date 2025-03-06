@@ -19,6 +19,7 @@ function ProtectedRoute({ children }) {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/users/${user_id} `,
         {},
+        { withCredentials: true },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
