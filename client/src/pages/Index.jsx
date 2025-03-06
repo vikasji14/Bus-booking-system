@@ -37,6 +37,7 @@ function Index() {
       setCities(response.data.data);
     });
   }, []);
+  console.log("data",cities)
 
   useCallback(() => {
     if (filters.from && filters.to && filters.journeyDate) {
