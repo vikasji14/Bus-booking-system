@@ -12,19 +12,7 @@ function Login() {
   const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values,
-        {
-          headers: {
-            "Content-Type": "application/json", 
-            "Access-Control-Allow-Origin": "https://bus-booking-system-1bk7.vercel.app", // Allow CORS
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-          },
-          withCredentials: true // Include cookies for authentication if needed
-        }
-
-
-       );
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values );
       dispatch(HideLoading());
       if (response.data.success) {
         message.success(response.data.message);
