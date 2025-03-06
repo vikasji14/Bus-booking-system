@@ -8,8 +8,8 @@ const bodyParser = require("body-parser");
 
 app.use(
   cors({
-    origin: "https://bus-booking-system-1bk7.vercel.app", // ✅ Specific frontend URL allow
-    credentials: true, // ✅ Cookies/tokens ke liye allow
+    origin: ["http://localhost:3000", "https://bus-booking-system-1bk7.vercel.app"], // ✅ Allow frontend origins
+    credentials: true, // ✅ Allow cookies/tokens
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
