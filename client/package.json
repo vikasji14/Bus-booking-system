@@ -53,5 +53,5 @@
     "tailwindcss": "^3.1.8",
     "dotenv": "^16.0.3"
   },
-  "proxy":"https://bus-booking-system-beige.vercel.app"
+  "proxy":"https://bus-booking-system-mauve.vercel.app"
 }
