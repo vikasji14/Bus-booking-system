@@ -5,7 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/alertsSlice";
 import { Helmet } from "react-helmet";
-import config from '../config';
 
 function Login() {
   const navigate = useNavigate();
