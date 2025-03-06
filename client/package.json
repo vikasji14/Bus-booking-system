@@ -52,6 +52,5 @@
     "postcss": "^8.4.17",
     "tailwindcss": "^3.1.8",
     "dotenv": "^16.0.3"
-  },
-  "proxy":"https://bus-booking-system-ed2p.vercel.app"
+  }
 }
