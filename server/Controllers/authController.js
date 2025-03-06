@@ -106,7 +106,7 @@ const Login = async (req, res) => {
 const ResetPassword = async (req, res) => {
   const { email } = req.body;
   const name = User.name;
-  const redirectUrl = "http://localhost:3000/reset-password";
+  const redirectUrl = "https://bus-booking-system-beige.vercel.app/reset-password";
 
   // check if email exists
   User.find({ email })
