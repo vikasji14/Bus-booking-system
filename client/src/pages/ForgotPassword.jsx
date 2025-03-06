@@ -14,7 +14,8 @@ function ForgotPassword() {
       dispatch(ShowLoading());
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/auth/requestPasswordReset`,
-        values
+        values,
+        { withCredentials: true }
       );
       if (response.status === 200) {
         dispatch(HideLoading());

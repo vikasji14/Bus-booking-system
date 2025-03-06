@@ -7,8 +7,8 @@ const dbConfig = require("./config/dbConfig");
 const bodyParser = require("body-parser");
 
 app.use(cors({
-  // origin:"https://bus-booking-system-1bk7.vercel.app", // Allow frontend URL
-  origin:["https://bus-booking-system-1bk7.vercel.app", "http://localhost:3000"], // Allow frontend URL
+  origin:"*", // Allow frontend URL
+  // origin:["https://bus-booking-system-1bk7.vercel.app", "http://localhost:3000"], // Allow frontend URL
   credentials: true, // Allow cookies & auth headers
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers

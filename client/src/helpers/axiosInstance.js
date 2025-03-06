@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://bus-booking-system-ed2p.vercel.app",
+  baseURL: "http://localhost:5000",
   withCredentials: true, 
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
