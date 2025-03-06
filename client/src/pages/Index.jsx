@@ -50,6 +50,7 @@ function Index() {
       <Helmet>
         <title>Bus Booking</title>
       </Helmet>
+      
       <div className="h-screen flex bg-gray-900">
         <div
           className="hero min-h-screen lg:flex w-full lg:w-3/4"
@@ -185,6 +186,8 @@ function Index() {
             </div>
           </div>
         </div>
+
+
       </div>
     </>
   );
