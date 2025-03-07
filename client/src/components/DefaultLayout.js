@@ -10,17 +10,20 @@ function DefaultLayout({ children }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  console.log(showMobileMenu)
 
   const menuHandler = () => {
     setShowMobileMenu(!showMobileMenu);
-    if (showDropdown) {
-      setShowDropdown(false);
-    }
-    if (!showMobileMenu) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    
+    
+    // if (showDropdown) {
+    //   setShowDropdown(false);
+    // }
+    // if (!showMobileMenu) {
+    //   document.body.style.overflow = 'hidden';
+    // } else {
+    //   document.body.style.overflow = 'unset';
+    // }
   };
 
   useEffect(() => {
@@ -51,47 +54,74 @@ function DefaultLayout({ children }) {
       <Link 
         to="/easy-booking"
         className="text-white hover:text-gray-300 flex items-center gap-2"
-        onClick={() => setShowMobileMenu(false)}
+        // onClick={() => setShowMobileMenu(false)}
       >
         <i className="ri-home-line text-xl"></i>
         <span className="md:inline">Home</span>
       </Link>
       
       {user?.isAdmin ? (
-        <div className="flex md:flex-row flex-col md:items-center gap-4">
-          <Link 
-            to="/admin/buses"
-            className="text-white hover:text-gray-300 flex items-center gap-2"
-            onClick={() => setShowMobileMenu(false)}
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="relative inline-flex items-center justify-start px-6 py-2 overflow-hidden font-bold rounded-full group"
           >
-            <i className="ri-bus-line text-xl"></i>
-            <span className="md:inline">Buses</span>
-          </Link>
-          <Link 
-            to="/admin/users"
-            className="text-white hover:text-gray-300 flex items-center gap-2"
-            onClick={() => setShowMobileMenu(false)}
-          >
-            <i className="ri-user-line text-xl"></i>
-            <span className="md:inline">Users</span>
-          </Link>
-          <Link 
-            to="/admin/bookings"
-            className="text-white hover:text-gray-300 flex items-center gap-2"
-            onClick={() => setShowMobileMenu(false)}
-          >
-            <i className="ri-file-list-line text-xl"></i>
-            <span className="md:inline">Bookings</span>
-          </Link>
+            <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+            <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
+            <span className="relative flex items-center gap-2 text-white">
+              <i className="ri-admin-line"></i>
+              Admin
+              <i className={`ri-arrow-down-s-line transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}></i>
+            </span>
+            <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
+          </button>
+          {showDropdown && (
+            <>
+              <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 overflow-hidden z-50">
+                <Link
+                  to="/admin/buses"
+                  className="flex items-center px-4 py-3 text-white hover:bg-gray-700 transition-colors"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <i className="ri-bus-line mr-3"></i>
+                  Manage Buses
+                </Link>
+                <Link
+                  to="/admin/users"
+                  className="flex items-center px-4 py-3 text-white hover:bg-gray-700 transition-colors"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <i className="ri-user-settings-line mr-3"></i>
+                  Manage Users
+                </Link>
+                <Link
+                  to="/admin/bookings"
+                  className="flex items-center px-4 py-3 text-white hover:bg-gray-700 transition-colors"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <i className="ri-file-list-line mr-3"></i>
+                  View Bookings
+                </Link>
+              </div>
+              <div 
+                className="fixed inset-0 z-40"
+                onClick={() => setShowDropdown(false)}
+              ></div>
+            </>
+          )}
         </div>
       ) : (
         <Link 
-          to="/bookings"
-          className="text-white hover:text-gray-300 flex items-center gap-2"
-          onClick={() => setShowMobileMenu(false)}
+          to="/bookings" 
+          className="relative inline-flex items-center justify-start px-6 py-2 overflow-hidden font-bold rounded-full group"
         >
-          <i className="ri-file-list-line text-xl"></i>
-          <span className="md:inline">Bookings</span>
+          <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+          <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
+          <span className="relative flex items-center gap-2 text-white">
+            <i className="ri-ticket-2-line"></i>
+            Bookings
+          </span>
+          <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
         </Link>
       )}
       
