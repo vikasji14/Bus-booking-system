@@ -193,8 +193,8 @@ function BookNow() {
                             <div>
                               <p className="text-sm text-gray-500 dark:text-gray-400">Total Amount</p>
                               <div className="mt-1 flex items-baseline">
-                                <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">DH {bus.price * selectedSeats.length}</span>
-                                <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">/ {selectedSeats.length} seats</span>
+                                <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">₹ {bus.price * selectedSeats.length}</span>
+                                <span className="ml-1 text-sm text-gray-500 dark:text-gray-400"> {selectedSeats.length} seats</span>
                               </div>
                             </div>
                             

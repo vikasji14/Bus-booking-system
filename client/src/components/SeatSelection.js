@@ -43,20 +43,6 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
 
       {/* Bus Layout */}
       <div className="relative max-w-sm mx-auto">
-        {/* Driver's Seat */}
-        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <div className="w-10 h-10 bg-gradient-to-br from-gray-700 to-gray-800 dark:from-gray-600 dark:to-gray-700 rounded-full flex items-center justify-center shadow-xl">
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </div>
-          <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 mt-1">Driver</span>
-        </div>
-
-        {/* Steering Wheel */}
-        <div className="absolute -top-14 left-1/2 transform -translate-x-1/2">
-          <div className="w-16 h-6 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 rounded-t-full"></div>
-        </div>
 
         {/* Seats Grid */}
         <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
@@ -76,11 +62,28 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
                   }`}
                 >
                   <button
-                    className={`w-full h-10 rounded-lg ${seatClass} transition-all duration-200 disabled:opacity-50 flex items-center justify-center transform hover:scale-105 active:scale-95`}
+                    className={`w-full h-12 rounded-lg ${seatClass} transition-all duration-200 disabled:opacity-50 flex items-center justify-center transform hover:scale-105 active:scale-95 relative overflow-hidden`}
                     onClick={() => selectOrUnselectSeats(seatNumber + 1)}
                     disabled={bus.seatsBooked.includes(seatNumber + 1)}
                   >
-                    <span className="font-medium text-sm">{seatNumber + 1}</span>
+                    {/* Seat Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="w-10 h-10 text-current opacity-30" viewBox="0 0 24 24" fill="none">
+                        {/* Seat Back */}
+                        <path d="M5 18V11C5 7.68629 7.68629 5 11 5H13C16.3137 5 19 7.68629 19 11V18" 
+                          stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        {/* Seat Base */}
+                        <path d="M4 17H20V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V17Z" 
+                          fill="currentColor"/>
+                        {/* Headrest */}
+                        <path d="M9 5.5C9 4.11929 10.1193 3 11.5 3H12.5C13.8807 3 15 4.11929 15 5.5V6H9V5.5Z" 
+                          fill="currentColor"/>
+                        {/* Seat Pattern */}
+                        <path d="M8 12H16M8 15H16" 
+                          stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                    <span className="font-medium text-sm relative z-10">{seatNumber + 1}</span>
                   </button>
                   {/* Tooltip */}
                   <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
