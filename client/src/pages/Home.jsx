@@ -6,6 +6,7 @@ import Bus from "../components/Bus";
 import { Row, Col, message } from "antd";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+
 function Home() {
   const dispatch = useDispatch();
   const [buses, setBuses] = useState([]);
@@ -36,7 +37,6 @@ function Home() {
     axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
       setCities(response.data.data);
     });
-
   }, []);
 
   useEffect(() => {
@@ -46,7 +46,6 @@ function Home() {
           `${process.env.REACT_APP_SERVER_URL}/api/buses/1/allbuses`
         );
         setAllBuses(response.data.data);
-        console.log("All Buses:", response.data.data);
       } catch (error) {
         console.error("Error fetching buses:", error);
       }
@@ -55,7 +54,7 @@ function Home() {
     fetchBuses();
   }, []);
 
-  useCallback(() => {
+  useEffect(() => {
     if (filters.from && filters.to && filters.journeyDate) {
       getBusesByFilter();
     }
@@ -67,106 +66,125 @@ function Home() {
         <title>Home</title>
       </Helmet>
       <div className="overflow-x-hidden">
-        <div className="full  my-5 mx-2 p-2 px-2 py-3 flex justify-center">
-          <Row gutter={10} align="center">
-            <Col lg={12} sm={24}>
-              <select
-                className="mb-5 select select-primary bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-white dark:text-white"
-                onChange={(e) => {
-                  setFilters({ ...filters, from: e.target.value });
-                }}
-              >
-                <option value="">Your Location</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
-              </select>
-            </Col>
-            <Col lg={12} sm={24}>
-              <select
-                className="mb-5 select select-primary bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-white dark:text-white "
-                onChange={(e) => {
-                  setFilters({ ...filters, to: e.target.value });
-                }}
-              >
-                <option value="">Destination</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
-              </select>
-            </Col>
-            <Col lg={24} sm={24}>
-              <input
-                className="mb-5 input input-primary bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-white dark:text-white "
-                min={new Date().toISOString().split("T")[0]}
-                type="date"
-                placeholder="Select Date"
-                onChange={(e) => {
-                  setFilters({ ...filters, journeyDate: e.target.value });
-                }}
-              />
-            </Col>
-            <Col lg={8} sm={24}>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => {
-                    getBusesByFilter();
-                  }}
-                  className="relative inline-flex items-center justify-start
-                    px-10 py-3 overflow-hidden font-bold rounded-full
-                    group"
-                >
-                  <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-                  <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
-                  <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-                    Search
-                  </span>
-                  <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
-                </button>
+        <div className="max-w-4xl mx-auto my-8">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center">Find Your Bus</h2>
+            <form onSubmit={(e) => { e.preventDefault(); getBusesByFilter(); }} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Your Location
+                  </label>
+                  <div className="relative">
+                    <select
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none"
+                      onChange={(e) => setFilters({ ...filters, from: e.target.value })}
+                      required
+                    >
+                      <option value="">Select Location</option>
+                      {cities.map((data, index) => (
+                        <option key={index} value={data.ville}>
+                          {data.ville}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Destination
+                  </label>
+                  <div className="relative">
+                    <select
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white appearance-none"
+                      onChange={(e) => setFilters({ ...filters, to: e.target.value })}
+                      required
+                    >
+                      <option value="">Select Destination</option>
+                      {cities.map((data, index) => (
+                        <option key={index} value={data.ville}>
+                          {data.ville}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-            </Col>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Journey Date
+                </label>
+                <input
+                  type="date"
+                  min={new Date().toISOString().split("T")[0]}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  onChange={(e) => setFilters({ ...filters, journeyDate: e.target.value })}
+                  required
+                />
+              </div>
 
-          </Row>
-
+              <div className="flex justify-center pt-4">
+                <button
+                  type="submit"
+                  className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 active:scale-95"
+                >
+                  Search Buses
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+
         {status && buses.length === 0 && (
-          <div className="flex justify-center w-full pb-4 items-center">
-            <div className="font-bold text-red-800">***No any Bus Available plz try another date or change your destination</div>
+          <div className="max-w-4xl mx-auto mt-4">
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">
+                    No buses available for the selected route and date.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
-        <Row gutter={[15, 15]}>
-            <div className="flex flex-wrap gap-4 md:gap-10 justify-center w-full">
-              {buses.map((bus, index) => {
-                return (
-                  <Col key={index} lg={10} sm={10}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Row gutter={[16, 16]} className="mt-8">
+            <div className="flex flex-wrap gap-6 justify-center w-full">
+              {buses.length > 0 ? (
+                buses.map((bus, index) => (
+                  <Col key={index} lg={10} sm={24}>
                     <Bus bus={bus} />
                   </Col>
-                );
-              })}
-            </div>
-
-          {buses.length === 0 && (
-            <div className="flex flex-wrap gap-4 md:gap-10 justify-center w-full">
-              {allBuses.map((bus, index) => {
-                return (
-                  <Col key={index} lg={10} sm={10}>
+                ))
+              ) : (
+                allBuses.map((bus, index) => (
+                  <Col key={index} lg={10} sm={24}>
                     <Bus bus={bus} />
                   </Col>
-                );
-              })}
+                ))
+              )}
             </div>
-          )}
-        </Row>
+          </Row>
+        </div>
       </div>
     </>
   );

@@ -1,113 +1,138 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/img/logo.png";
 import moment from "moment";
+import { FaLocationDot } from "react-icons/fa6";
+import { MdModeStandby } from "react-icons/md";
+
 
 function Bus({ bus }) {
   const navigate = useNavigate();
   return (
-    <>
-      <div className="max-w-full bg-white flex flex-col rounded overflow-hidden shadow-lg">
-        <div className="flex flex-row items-baseline flex-nowrap bg-gray-100 p-2">
-          <img className="h-10 w-10 rounded-full mr-4" src={logo} alt="Logo" />
-          <h1 className="ml-2 uppercase font-bold">Date: </h1>
-          <p className="ml-2 font-base text-gray-500">{bus.journeyDate}</p>
-        </div>
-        <div className="mt-2 flex justify-start bg-white p-2"></div>
-        <div className="mt-2 flex sm:flex-row flex-col justify-between flex-wrap ">
-
-          <div className=" p-2">
-            <div className=" ml-2">
-              <p className="text-base font-bold text-2xl">{bus.name}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col flex-wrap p-2">
-            <p className="font-bold">Departure Time</p>
-            <p className="font-base">
-              {moment(bus.departure, "HH:mm").format("hh:mm A")}
-            </p>
-
-            <p className="font-bold">From </p>
-            <p className="text-gray-500">{bus.from}</p>
-          </div>
-
-          <div className="flex flex-col flex-wrap p-2">
-            <p className="font-bold">Arrival Time</p>
-            <p className="font-base">
-              {moment(bus.arrival, "HH:mm").format("hh:mm A")}
-            </p>
-
-            <p className="font-bold">To</p>
-
-            <p className="text-gray-500">{bus.to}</p>
-          </div>
-          
-        </div>
-        <div className="mt-4 bg-gray-100 flex flex-row flex-wrap md:flex-nowrap justify-between items-baseline">
-          <div className="flex mx-6 py-4 flex-row flex-wrap">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"
-              />
-            </svg>
-
-            <div className="text-sm mx-2 flex flex-col">
-              <p className="font-bold text-base">Price ₹ {bus.price}/- </p>
-            </div>
-          </div>
-          <div className="md:border-l-2 mx-6 md:border-dotted flex flex-row py-4 mr-6 flex-wrap">
-            <svg
-              className="w-12 h-10 p-2 mx-2 self-center bg-green-800 rounded-full fill-current text-white"
-              viewBox="0 0 64 64"
-              pointerEvents="all"
-              aria-hidden="true"
-              role="presentation"
-              style={{
-                display: "block",
-                height: "2em",
-                width: "2em",
-                fill: "currentcolor",
-              }}
-            >
-              <path d="M62.917 38.962C59.376 53.71 47.207 64 31.833 64a31.93 31.93 0 01-21.915-8.832l-5.376 5.376a2.65 2.65 0 01-1.874.789A2.685 2.685 0 010 58.668V40a2.687 2.687 0 012.667-2.667h18.666A2.687 2.687 0 0124 40a2.645 2.645 0 01-.793 1.877L17.5 47.58a21.244 21.244 0 0032.665-4.414 33.706 33.706 0 002.208-4.873 1.292 1.292 0 011.25-.96h8a1.342 1.342 0 011.333 1.337.738.738 0 01-.041.293M64 24a2.687 2.687 0 01-2.667 2.668H42.667A2.687 2.687 0 0140 24a2.654 2.654 0 01.793-1.877l5.749-5.746a21.336 21.336 0 00-32.706 4.457 33.224 33.224 0 00-2.208 4.873 1.293 1.293 0 01-1.25.96H2.085A1.342 1.342 0 01.752 25.33v-.293C4.334 10.247 16.626 0 32 0a32.355 32.355 0 0122.041 8.832l5.419-5.376a2.644 2.644 0 011.872-.789A2.685 2.685 0 0164 5.333z"></path>
-            </svg>
-            <button
-              className="relative inline-flex items-center justify-start
-                px-10 py-3 overflow-hidden font-bold rounded-full
-                group"
-              onClick={() => {
-                if (localStorage.getItem("user_id")) {
-                  navigate(`/book-now/${bus._id}`);
-                } else {
-                  navigate(`/login`);
-                }
-                // clear local storage
-                localStorage.removeItem("idTrip");
-                // set id trip local storage
-                localStorage.setItem("idTrip", bus._id);
-              }}
-            >
-              <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-              <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
-              <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-                Book Now
-              </span>
-              <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
-            </button>
-          </div>
-        </div>
+    <div className="relative p-6 bg-white  rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 max-w-lg min-w-[350px] w-full">
+      {/* Journey Date */}
+      <div className="absolute -top-3 left-6">
+        <span className="px-4 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+          {moment(bus.journeyDate).format("DD MMM, YYYY")}
+        </span>
       </div>
-    </>
+
+      {/* Bus Status Badge */}
+      <div className="absolute -top-3 right-6">
+        <span className={`px-4 py-1 rounded-full text-sm font-medium ${
+          bus.status === "Yet To Start" 
+            ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
+            : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+        }`}>
+          {bus.status}
+        </span>
+      </div>
+
+      {/* Bus Info */}
+      <div className="space-y-6 pt-4">
+        {/* Bus Name and Type */}
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white">{bus.name}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Bus No: {bus.busNumber}</p>
+          </div>
+          <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-lg dark:bg-gray-700">
+            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.type}</span>
+          </div>
+        </div>
+
+        {/* Journey Details */}
+        <div className="flex items-center space-x-4">
+          <div className="flex-1">
+            <div className="relative">
+              {/* Journey Path Visual */}
+              <div className="absolute left-2 top-1/2 w-[calc(100%-1rem)] h-0.5 bg-gradient-to-r from-blue-500 to-green-500 transform -translate-y-1/2"></div>
+              {/* Animated Bus Icon */}
+              <div className="absolute left-0 top-1/2 transform -translate-y-1/2 animate-[rightMove_4s_linear_infinite] group">
+                <div className="relative -top-2">
+                  <svg className="w-7 h-7 text-blue-600 dark:text-blue-400 transform -scale-x-100 drop-shadow-lg group-hover:text-blue-700 transition-colors duration-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 10a1 1 0 100 2 1 1 0 000-2m8 0a1 1 0 100 2 1 1 0 000-2m-2.5-4h-3a.5.5 0 000 1h3a.5.5 0 000-1M21 11.5V9c0-3.5-3.6-4-8-4s-8 .5-8 4v2.5c0 .3-.2.5-.5.5h-1c-.3 0-.5.2-.5.5v2c0 .3.2.5.5.5H4c.3 0 .5-.2.5-.5V12c0-.3.2-.5.5-.5h14c.3 0 .5.2.5.5v2.5c0 .3.2.5.5.5h.5c.3 0 .5-.2.5-.5v-2c0-.3-.2-.5-.5-.5h-1c-.3 0-.5-.2-.5-.5M7 6.7c-.2-.2-.3-.4-.3-.7 0-.5.4-1 1-1h8.6c.6 0 1 .4 1 1 0 .3-.1.5-.3.7-.2.2-.4.3-.7.3H7.7c-.3 0-.5-.1-.7-.3m.8 10.2C6.8 17 6 16.2 6 15.2s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7m8.5 0c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div className="relative flex justify-between">
+                <div className="flex flex-col items-center">
+                  <div className="relative">
+                    <FaLocationDot size={20} className="text-blue-600 dark:text-blue-400" />
+                    <div className="absolute -inset-1 bg-blue-400 rounded-full animate-ping opacity-20"></div>
+                  </div>
+                  <button className="mt-2 px-4 py-2 text-sm font-medium bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300/50 dark:border-gray-600/50 rounded-lg shadow-sm hover:shadow-blue-200 dark:hover:shadow-blue-900/30 hover:scale-105 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 hover:border-blue-500/50 dark:hover:border-blue-400/50 group relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 dark:from-blue-500/5 dark:to-blue-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div className="absolute inset-0 bg-blue-50 dark:bg-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                    <span className="relative inline-flex items-center gap-1.5">
+                      <span className="text-blue-600/80 dark:text-blue-400/80 group-hover:scale-110 transition-transform duration-200">📍</span>
+                      <span className="group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-200">{bus.from}</span>
+                    </span>
+                    <span className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 w-0 group-hover:w-full transition-all duration-300"></span>
+                  </button>
+                  <p className="text-xs font-medium text-blue-600/90 dark:text-blue-400/90 mt-2">
+                    {moment(bus.departure, "HH:mm").format("hh:mm A")}
+                  </p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <div className="relative">
+                    <MdModeStandby size={20} className="text-green-600 dark:text-green-400" />
+                    <div className="absolute -inset-1 bg-green-400 rounded-full animate-ping opacity-20"></div>
+                  </div>
+                  <button className="mt-2 px-4 py-2 text-sm font-medium bg-gradient-to-br from-green-50 via-white to-green-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300/50 dark:border-gray-600/50 rounded-lg shadow-sm hover:shadow-green-200 dark:hover:shadow-green-900/30 hover:scale-105 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 hover:border-green-500/50 dark:hover:border-green-400/50 group relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-green-600/10 dark:from-green-500/5 dark:to-green-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div className="absolute inset-0 bg-green-50 dark:bg-green-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                    <span className="relative inline-flex items-center gap-1.5">
+                      <span className="text-green-600/80 dark:text-green-400/80 group-hover:scale-110 transition-transform duration-200">🏁</span>
+                      <span className="group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors duration-200">{bus.to}</span>
+                    </span>
+                    <span className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-green-500 to-green-600 w-0 group-hover:w-full transition-all duration-300"></span>
+                  </button>
+                  <p className="text-xs font-medium text-green-600/90 dark:text-green-400/90 mt-2">
+                    {moment(bus.arrival, "HH:mm").format("hh:mm A")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Features and Price */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-lg dark:bg-gray-700">
+              <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{bus.price}</p>
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</p>
+          </div>
+        </div>
+
+        {/* Book Now Button */}
+        <button
+          className="w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700"
+          onClick={() => {
+            if (localStorage.getItem("user_id")) {
+              navigate(`/book-now/${bus._id}`);
+            } else {
+              navigate(`/login`);
+            }
+            localStorage.removeItem("idTrip");
+            localStorage.setItem("idTrip", bus._id);
+          }}
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
   );
 }
 

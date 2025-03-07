@@ -14,6 +14,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
+    "react-icons": "^5.5.0",
     "react-qr-code": "^2.0.8",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
@@ -48,9 +49,9 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.12", 
+    "autoprefixer": "^10.4.12",
+    "dotenv": "^16.0.3",
     "postcss": "^8.4.17",
-    "tailwindcss": "^3.1.8",
-    "dotenv": "^16.0.3"
+    "tailwindcss": "^3.1.8"
   }
 }
