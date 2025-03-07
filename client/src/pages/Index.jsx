@@ -14,7 +14,7 @@ function Index() {
   const [cities, setCities] = useState([]);
   const [filters, setFilters] = useState({});
   const [allBuses, setAllBuses] = useState([]);
-
+  const [status, setStatus] = useState(false);
   const getBusesByFilter = useCallback(async () => {
     dispatch(ShowLoading());
     const from = filters.from;
@@ -24,7 +24,7 @@ function Index() {
       const { data } = await axiosInstance.post(
         `${process.env.REACT_APP_SERVER_URL}/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
       );
-
+      setStatus(true);
       setBuses(data.data);
       dispatch(HideLoading());
     } catch (error) {
@@ -77,10 +77,27 @@ function Index() {
               backgroundPosition: "center center",
             }}
           >
+
             <div className="flex items-center h-full w-full">
+              {
+                (status && buses.length === 0) && (
+                  <div className="flex justify-center mx-auto mt-2 items-center">
+                    <p className="text-red-800 font-bold"> **No Bus Avaliable</p>
+                  </div>
+                )
+              }
               <div className="h-screen overflow-auto overflow-x-hidden">
+
                 <div className="bg-opacity-80">
                   <Row gutter={[15, 15]}>
+                    {/* {
+                      buses.length != 0 && (
+                        <div className="flex opacity-80 justify-center mx-auto mt-2 items-center">
+                          <p className="text-black font-bold text-2xl underline"> {filters.from}  <span>{buses.length!=0 && "To" }</span> {filters.to}  {filters.journeyDate}</p>
+                        </div>
+                      )
+                    } */}
+
                     {buses.map((bus, index) => {
                       return (
                         <div key={index} className="w-screen p-10 ">
@@ -178,6 +195,7 @@ function Index() {
                       <button
                         onClick={() => {
                           getBusesByFilter();
+
                         }}
                         className="relative inline-flex items-center justify-start
                     px-10 py-3 overflow-hidden font-bold rounded-full
