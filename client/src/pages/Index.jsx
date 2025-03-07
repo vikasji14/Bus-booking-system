@@ -124,7 +124,7 @@ function Index() {
                 <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
               </Link>
               <div className="w-full text-black my-5 mx-2 p-2 px-2 py-3 flex justify-center">
-                <Row gutter={10} align="center">
+                <div className="w-full" gutter={10} align="center">
                   <Col lg={12} sm={24}>
                     <select
                       className="mb-5 select select-primary w-full max-w-xs"
@@ -132,7 +132,7 @@ function Index() {
                         setFilters({ ...filters, from: e.target.value });
                       }}
                     >
-                      <option value="">From</option>
+                      <option value="">Your Location</option>
                       {cities.map((data, index) => {
                         return (
                           <option key={index} value={data.ville}>
@@ -149,7 +149,7 @@ function Index() {
                         setFilters({ ...filters, to: e.target.value });
                       }}
                     >
-                      <option value="">To</option>
+                      <option value="">Destination</option>
                       {cities.map((data, index) => {
                         return (
                           <option key={index} value={data.ville}>
@@ -199,7 +199,7 @@ function Index() {
                       </div>
                     )}
                   </div>
-                </Row>
+                </div>
               </div>
             </div>
           </div>
