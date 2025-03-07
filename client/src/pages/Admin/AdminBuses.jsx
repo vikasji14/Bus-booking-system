@@ -20,7 +20,7 @@ function AdminBuses() {
     try {
       setLoading(true);
       dispatch(ShowLoading());
-      const response = await axiosInstance.post(`http://localhost:5000/api/buses/get-all-buses`, {}, { withCredentials: true });
+      const response = await axiosInstance.post(`{process.env.REACT_APP_SERVER_URL}/api/buses/get-all-buses`, {}, { withCredentials: true });
       dispatch(HideLoading());
       if (response.data.success) {
         setBuses(response.data.data);
