@@ -5,12 +5,13 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
 import { Row, Col, message } from "antd";
 import { Helmet } from "react-helmet";
-
+import axios from "axios";
 function Home() {
   const dispatch = useDispatch();
   const [buses, setBuses] = useState([]);
   const [cities, setCities] = useState([]);
   const [filters, setFilters] = useState({});
+  const [allBuses, setAllBuses] = useState([]);
 
   const getBusesByFilter = useCallback(async () => {
     dispatch(ShowLoading());
@@ -33,6 +34,23 @@ function Home() {
     axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
       setCities(response.data.data);
     });
+
+  }, []);
+
+  useEffect(() => {
+    const fetchBuses = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/buses/1/allbuses`
+        );
+        setAllBuses(response.data.data);
+        console.log("All Buses:", response.data.data);
+      } catch (error) {
+        console.error("Error fetching buses:", error);
+      }
+    };
+
+    fetchBuses();
   }, []);
 
   useCallback(() => {
@@ -46,8 +64,8 @@ function Home() {
       <Helmet>
         <title>Home</title>
       </Helmet>
-      <div>
-        <div className="full my-5 mx-2 p-2 px-2 py-3 flex justify-center">
+      <div className="overflow-x-hidden">
+        <div className="full  my-5 mx-2 p-2 px-2 py-3 flex justify-center">
           <Row gutter={10} align="center">
             <Col lg={12} sm={24}>
               <select
@@ -124,10 +142,14 @@ function Home() {
             );
           })}
           {buses.length === 0 && (
-            <div className="flex justify-center w-full">
-              <h1 className="text-2xl font-bold text-gray-500">
-                No buses found
-              </h1>
+            <div className="flex flex-wrap gap-4 md:gap-10 justify-center w-full">
+              {allBuses.map((bus, index) => {
+                return (
+                  <Col key={index} lg={10} sm={10}>
+                    <Bus bus={bus} />
+                  </Col>
+                );
+              })}
             </div>
           )}
         </Row>
