@@ -10,7 +10,6 @@ function DefaultLayout({ children }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
-  console.log(showMobileMenu)
 
   const menuHandler = () => {
     setShowMobileMenu(!showMobileMenu);
