@@ -12,6 +12,7 @@ function Home() {
   const [cities, setCities] = useState([]);
   const [filters, setFilters] = useState({});
   const [allBuses, setAllBuses] = useState([]);
+  const [status, setStatus] = useState(false);
 
   const getBusesByFilter = useCallback(async () => {
     dispatch(ShowLoading());
@@ -22,6 +23,7 @@ function Home() {
       const { data } = await axiosInstance.post(
         `${process.env.REACT_APP_SERVER_URL}/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
       );
+      setStatus(true);
       setBuses(data.data);
       dispatch(HideLoading());
     } catch (error) {
@@ -74,7 +76,7 @@ function Home() {
                   setFilters({ ...filters, from: e.target.value });
                 }}
               >
-                <option value="">From</option>
+                <option value="">Your Location</option>
                 {cities.map((data, index) => {
                   return (
                     <option key={index} value={data.ville}>
@@ -91,7 +93,7 @@ function Home() {
                   setFilters({ ...filters, to: e.target.value });
                 }}
               >
-                <option value="">To</option>
+                <option value="">Destination</option>
                 {cities.map((data, index) => {
                   return (
                     <option key={index} value={data.ville}>
@@ -106,7 +108,7 @@ function Home() {
                 className="mb-5 input input-primary bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-white dark:text-white "
                 min={new Date().toISOString().split("T")[0]}
                 type="date"
-                placeholder="Date"
+                placeholder="Select Date"
                 onChange={(e) => {
                   setFilters({ ...filters, journeyDate: e.target.value });
                 }}
@@ -130,17 +132,29 @@ function Home() {
                   <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
                 </button>
               </div>
+
             </Col>
+
           </Row>
+
         </div>
+        {status && buses.length === 0 && (
+          <div className="flex justify-center w-full pb-4 items-center">
+            <div className="font-bold text-red-800">***No any Bus Available plz try another date or change your destination</div>
+          </div>
+        )}
+
         <Row gutter={[15, 15]}>
-          {buses.map((bus, index) => {
-            return (
-              <Col key={index} lg={24} sm={24}>
-                <Bus bus={bus} />
-              </Col>
-            );
-          })}
+            <div className="flex flex-wrap gap-4 md:gap-10 justify-center w-full">
+              {buses.map((bus, index) => {
+                return (
+                  <Col key={index} lg={10} sm={10}>
+                    <Bus bus={bus} />
+                  </Col>
+                );
+              })}
+            </div>
+
           {buses.length === 0 && (
             <div className="flex flex-wrap gap-4 md:gap-10 justify-center w-full">
               {allBuses.map((bus, index) => {

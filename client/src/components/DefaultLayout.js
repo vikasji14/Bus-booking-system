@@ -111,7 +111,7 @@ function DefaultLayout({ children }) {
 
   return (
     <div className="w-full flex-row">
-      <div className="bg-gray-800 flex justify-between items-center py-2 px-4">
+      <div className="bg-gray-800 flex fixed top-0 z-50 w-full justify-between items-center py-2 px-4">
         <div className="flex items-center">
           <Link to="/">
             <img
@@ -174,7 +174,7 @@ function DefaultLayout({ children }) {
         ></div>
       )}
 
-      <div className="content">{children}</div>
+      <div className="content pt-24">{children}</div>
     </div>
   );
 }
