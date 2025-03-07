@@ -79,13 +79,7 @@ function Index() {
           >
 
             <div className="flex items-center h-full w-full">
-              {
-                (status && buses.length === 0) && (
-                  <div className="flex justify-center mx-auto mt-2 items-center">
-                    <p className="text-red-800 font-bold"> **No Bus Avaliable</p>
-                  </div>
-                )
-              }
+
               <div className="h-screen overflow-auto overflow-x-hidden">
 
                 <div className="bg-opacity-80">
@@ -211,11 +205,18 @@ function Index() {
                     </div>
                   </Col>
                   <div className="flex justify-center gap-4 mt-5 w-full">
-                    {buses.length === 0 && (
+                    {buses.length === 0 && !status && (
                       <div className="text-center text-white text-2xl">
                         Make your search now
                       </div>
                     )}
+                    {
+                      (status && buses.length === 0) && (
+                        <div className="flex justify-center mx-auto mt-2 items-center">
+                          <p className="text-red-800 font-bold"> **No Bus Avaliable You Can try another location</p>
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               </div>
