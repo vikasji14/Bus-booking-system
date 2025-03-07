@@ -8,13 +8,15 @@ function DefaultLayout({ children }) {
   const { user } = useSelector((state) => state.users);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
 
   const menuHandler = () => {
     setShowMobileMenu(!showMobileMenu);
-    
-    
+
+
     // if (showDropdown) {
     //   setShowDropdown(false);
     // }
@@ -50,15 +52,14 @@ function DefaultLayout({ children }) {
 
   const navigationContent = (
     <>
-      <Link 
+      <Link
         to="/easy-booking"
         className="text-white hover:text-gray-300 flex items-center gap-2"
-        // onClick={() => setShowMobileMenu(false)}
       >
-        <i className="ri-home-line text-xl"></i>
-        <span className="md:inline">Home</span>
+        <i className="ri-ticket-line  text-xl"></i>
+        <span className="md:inline">Booking</span>
       </Link>
-      
+
       {user?.isAdmin ? (
         <div className="relative">
           <button
@@ -102,7 +103,7 @@ function DefaultLayout({ children }) {
                   View Bookings
                 </Link>
               </div>
-              <div 
+              <div
                 className="fixed inset-0 z-40"
                 onClick={() => setShowDropdown(false)}
               ></div>
@@ -110,8 +111,8 @@ function DefaultLayout({ children }) {
           )}
         </div>
       ) : (
-        <Link 
-          to="/bookings" 
+        <Link
+          to="/bookings"
           className="relative inline-flex items-center justify-start px-6 py-2 overflow-hidden font-bold rounded-full group"
         >
           <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
@@ -123,14 +124,14 @@ function DefaultLayout({ children }) {
           <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
         </Link>
       )}
-      
-      <Link 
+
+      <Link
         to="/"
         onClick={() => {
           localStorage.clear();
           setShowMobileMenu(false);
         }}
-        className="text-white hover:text-gray-300 flex items-center gap-2"
+        className="text-white md:hidden  hover:text-gray-300 flex items-center gap-2"
       >
         <i className="ri-logout-box-line text-xl"></i>
         <span className="md:inline">Logout</span>
@@ -157,7 +158,7 @@ function DefaultLayout({ children }) {
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           className="md:hidden text-white p-2"
           onClick={menuHandler}
         >
@@ -166,20 +167,46 @@ function DefaultLayout({ children }) {
 
         {/* User Info */}
         <div className="hidden md:flex text-white text-base items-center gap-2">
-          <i className="ri-user-3-line text-xl"></i>
-          <div>
-            <div className="mt-1">{user?.name}</div>
-            <div className="mt-1">{user?.email}</div>
+          <div className="relative">
+            {/* User Icon */}
+            <div
+              className="w-14 h-14 flex items-center justify-center bg-slate-300 rounded-full cursor-pointer"
+              onClick={() => setShowDetails(!showDetails)}
+            >
+              <i className="ri-user-3-line text-xl text-gray-800"></i>
+            </div>
+
+
+            {showDetails && (
+              <div className="absolute right-0 mt-2 w-48 bg-gray-800 text-white rounded-lg shadow-lg p-3">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <div className="font-semibold">{user?.name}</div>
+                    <div className="text-sm text-gray-600">{user?.email}</div>
+                  </div>
+                  <Link
+                    to="/"
+                    onClick={() => {
+                      localStorage.clear();
+                      setShowMobileMenu(false);
+                    }}
+                    className="text-white hover:text-gray-300 flex items-center gap-2"
+                  >
+                    <i className="ri-logout-box-line text-xl"></i>
+                    <span className="md:inline">Logout</span>
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div 
+      <div
         ref={mobileMenuRef}
-        className={`md:hidden fixed right-0 top-24 bg-gray-800 border-l border-gray-700 h-screen w-64 shadow-lg z-50 transition-transform duration-300 ease-in-out transform ${
-          showMobileMenu ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`md:hidden fixed right-0 top-24 bg-gray-800 border-l border-gray-700 h-screen w-64 shadow-lg z-50 transition-transform duration-300 ease-in-out transform ${showMobileMenu ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex flex-col gap-4 p-4">
           {navigationContent}
@@ -197,7 +224,7 @@ function DefaultLayout({ children }) {
 
       {/* Overlay for mobile menu */}
       {showMobileMenu && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={menuHandler}
         ></div>

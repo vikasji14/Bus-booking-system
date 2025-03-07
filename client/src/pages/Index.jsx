@@ -119,7 +119,7 @@ function Index() {
                 Bus Booking
               </h1>
               <p className="mb-5 text-xl text-white">
-                Skip the queue, book online! Your journey begins with a click – secure seats, best prices, and stress-free travel.
+                Book online! Your journey begins with a click – secure seats, best prices, and stress-free travel.
               </p>
               <Link
                 to="/login"
@@ -213,7 +213,7 @@ function Index() {
                     {
                       (status && buses.length === 0) && (
                         <div className="flex justify-center mx-auto mt-2 items-center">
-                          <p className="text-red-800 font-bold"> **No Bus Avaliable You Can try another location</p>
+                          <p className="text-red-800 font-bold"> **No Bus Avaliable You Can try another Destination</p>
                         </div>
                       )
                     }
