@@ -53,7 +53,7 @@ function Index() {
 
     fetchBuses();
   }, []);
-  
+
   useCallback(() => {
     if (filters.from && filters.to && filters.journeyDate) {
       getBusesByFilter();

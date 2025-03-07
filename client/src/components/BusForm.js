@@ -20,7 +20,7 @@ function BusForm({
       dispatch(ShowLoading());
       let response = null;
       if (type === "add") {
-        response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/buses/add-bus`, values, { withCredentials: true } );
+        response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/buses/add-bus`, values, { withCredentials: true });
       } else {
         response = await axiosInstance.put(
           `${process.env.REACT_APP_SERVER_URL}/api/buses/${selectedBus._id}`,
@@ -51,7 +51,12 @@ function BusForm({
   return (
     <Modal
       width={800}
-      title={type === "add" ? "Add Bus" : "Update Bus"}
+      className="bus-form-modal"
+      title={
+        <div className="text-xl font-semibold text-gray-800 pb-4 border-b">
+          {type === "add" ? "Add New Bus" : "Update Bus Details"}
+        </div>
+      }
       visible={showBusForm}
       onCancel={() => {
         setSelectedBus(null);
@@ -59,220 +64,175 @@ function BusForm({
       }}
       footer={false}
     >
-      <Form layout="vertical" onFinish={onFinish} initialValues={selectedBus}>
-        <Row gutter={[10, 10]}>
+      <Form 
+        layout="vertical" 
+        onFinish={onFinish} 
+        initialValues={selectedBus}
+        className="pt-4"
+      >
+        <Row gutter={[24, 0]}>
           <Col lg={24} xs={24}>
             <Form.Item
-              label="Bus Name"
+              label={<span className="text-gray-700 font-medium">Bus Name</span>}
               name="name"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message:
-                    type === "add"
-                      ? "Please enter bus name"
-                      : "Please enter bus name",
-                },
-              ]}
+              rules={[{ required: true, message: "Please enter bus name" }]}
             >
               <input
                 type="text"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                placeholder="Enter bus name"
               />
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="Bus Number"
+              label={<span className="text-gray-700 font-medium">Bus Number</span>}
               name="busNumber"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input bus number!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input bus number!" }]}
             >
               <input
                 type="text"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                placeholder="Enter bus number"
               />
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="Capacity"
+              label={<span className="text-gray-700 font-medium">Capacity</span>}
               name="capacity"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input bus capacity!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input bus capacity!" }]}
             >
               <input
                 type="number"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                placeholder="Enter capacity"
               />
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="From"
+              label={<span className="text-gray-700 font-medium">From</span>}
               name="from"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please Choose an option",
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select departure city" }]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">From</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
+              <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+                <option value="">Select departure city</option>
+                {cities.map((data, index) => (
+                  <option key={index} value={data.ville}>
+                    {data.ville}
+                  </option>
+                ))}
               </select>
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="To"
+              label={<span className="text-gray-700 font-medium">To</span>}
               name="to"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please Choose an option",
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select destination city" }]}
             >
-              <select className="block border border-blue-500 w-full p-3 rounded-lg mb-4">
-                <option value="">To</option>
-                {cities.map((data, index) => {
-                  return (
-                    <option key={index} value={data.ville}>
-                      {data.ville}
-                    </option>
-                  );
-                })}
+              <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+                <option value="">Select destination city</option>
+                {cities.map((data, index) => (
+                  <option key={index} value={data.ville}>
+                    {data.ville}
+                  </option>
+                ))}
               </select>
             </Form.Item>
           </Col>
+
           <Col lg={8} xs={24}>
             <Form.Item
-              label="Journey Date"
+              label={<span className="text-gray-700 font-medium">Journey Date</span>}
               name="journeyDate"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input journey date!",
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select journey date!" }]}
             >
               <input
                 min={new Date().toISOString().split("T")[0]}
                 type="date"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
               />
             </Form.Item>
           </Col>
+
           <Col lg={8} xs={24}>
             <Form.Item
-              label="Departure"
+              label={<span className="text-gray-700 font-medium">Departure Time</span>}
               name="departure"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input departure time!",
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select departure time!" }]}
             >
               <input
                 type="time"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
               />
             </Form.Item>
           </Col>
+
           <Col lg={8} xs={24}>
             <Form.Item
-              label="Arrival"
+              label={<span className="text-gray-700 font-medium">Arrival Time</span>}
               name="arrival"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input arrival time!",
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select arrival time!" }]}
             >
               <input
                 type="time"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
               />
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="Price"
+              label={<span className="text-gray-700 font-medium">Price</span>}
               name="price"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  message: "Please input price!",
-                },
-              ]}
+              rules={[{ required: true, message: "Please input price!" }]}
             >
               <input
                 type="number"
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                placeholder="Enter price"
               />
             </Form.Item>
           </Col>
+
           <Col lg={12} xs={24}>
             <Form.Item
-              label="Status"
+              label={<span className="text-gray-700 font-medium">Status</span>}
               name="status"
-              rules={[
-                {
-                  required: type === "add" ? true : true,
-                  validateTrigger: "onSubmit",
-                },
-              ]}
+              rules={[{ required: true, message: "Please select status!" }]}
             >
-              <select
-                className="block border border-blue-500 w-full p-3 rounded-lg mb-4"
-                name=""
-                id=""
-              >
-                <option value="Yet to start">Yet To Start</option>
-                <option value="Running">Running</option>
-                <option disabled value="Completed">
-                  Completed
-                </option>
+              <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+                <option value="">Select status</option>
+                <option value="Yet To Start">Yet To Start</option>
+                <option value="running">Running</option>
+                <option value="Completed">Completed</option>
               </select>
             </Form.Item>
           </Col>
         </Row>
-        <div className="flex justify-end">
+
+        <div className="flex gap-4 justify-end mt-6">
+          <button
+            type="button"
+            className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-all"
+            onClick={() => {
+              setSelectedBus(null);
+              setShowBusForm(false);
+            }}
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            className="relative inline-flex items-center justify-start
-                px-10 py-3 overflow-hidden font-bold rounded-full
-                group"
+            className="px-6 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all"
           >
-            <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-            <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
-            <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-              Save
-            </span>
-            <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
+            {type === "add" ? "Add Bus" : "Update Bus"}
           </button>
         </div>
       </Form>

@@ -4,20 +4,23 @@ import PageTitle from "../../components/PageTitle";
 import { HideLoading, ShowLoading } from "../../redux/alertsSlice";
 import { useDispatch } from "react-redux";
 import { axiosInstance } from "../../helpers/axiosInstance";
-import { message, Table } from "antd";
+import { message, Table, Input, Button, Space } from "antd";
 import { Helmet } from "react-helmet";
+import { SearchOutlined } from "@ant-design/icons";
 
 function AdminBuses() {
   const dispatch = useDispatch();
   const [showBusForm, setShowBusForm] = useState(false);
   const [buses, setBuses] = useState([]);
   const [selectedBus, setSelectedBus] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const getBuses = useCallback(async () => {
     try {
+      setLoading(true);
       dispatch(ShowLoading());
-      const response = await axiosInstance.post(`http://localhost:5000/api/buses/get-all-buses`, {}, { withCredentials: true } );
-      console.log("Buses:", response);
+      const response = await axiosInstance.post(`http://localhost:5000/api/buses/get-all-buses`, {}, { withCredentials: true });
       dispatch(HideLoading());
       if (response.data.success) {
         setBuses(response.data.data);
@@ -27,6 +30,8 @@ function AdminBuses() {
     } catch (error) {
       dispatch(HideLoading());
       message.error(error.message);
+    } finally {
+      setLoading(false);
     }
   }, [dispatch]);
 
@@ -48,58 +53,113 @@ function AdminBuses() {
     }
   };
 
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => confirm()}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => confirm()}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+            className="bg-blue-500"
+          >
+            Search
+          </Button>
+          <Button onClick={() => clearFilters()} size="small" style={{ width: 90 }}>
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
+  });
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      ...getColumnSearchProps('name'),
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Bus Number",
       dataIndex: "busNumber",
+      ...getColumnSearchProps('busNumber'),
     },
     {
       title: "From",
       dataIndex: "from",
+      ...getColumnSearchProps('from'),
+      sorter: (a, b) => a.from.localeCompare(b.from),
     },
     {
       title: "To",
       dataIndex: "to",
+      ...getColumnSearchProps('to'),
+      sorter: (a, b) => a.to.localeCompare(b.to),
     },
     {
       title: "Journey Date",
       dataIndex: "journeyDate",
+      sorter: (a, b) => new Date(a.journeyDate) - new Date(b.journeyDate),
     },
-
     {
       title: "Status",
       dataIndex: "status",
+      filters: [
+        { text: 'Completed', value: 'Completed' },
+        { text: 'Running', value: 'running' },
+        { text: 'Pending', value: 'Pending' },
+      ],
+      onFilter: (value, record) => record.status === value,
       render: (status) => {
-        if (status === "Completed") {
-          return <span className="text-red-500">{status}</span>;
-        } else if (status === "running") {
-          return <span className="text-yellow-500">{status}</span>;
-        } else {
-          return <span className="text-green-500">{status}</span>;
+        let className = '';
+        switch(status) {
+          case 'Completed':
+            className = 'text-red-500 bg-red-100 px-2 py-1 rounded';
+            break;
+          case 'running':
+            className = 'text-yellow-500 bg-yellow-100 px-2 py-1 rounded';
+            break;
+          default:
+            className = 'text-green-500 bg-green-100 px-2 py-1 rounded';
         }
+        return <span className={className}>{status}</span>;
       },
     },
     {
       title: "Action",
-      dataIndex: "action",
-      render: (actions, record) => (
+      key: "action",
+      render: (_, record) => (
         <div className="flex gap-3">
-          <i
-            className="ri-delete-bin-line cursor-pointer text-red-500 text-xl"
+          <button
+            className="text-red-500 hover:text-red-700 transition-colors"
             onClick={() => deleteBus(record._id)}
-          ></i>
-
-          <i
-            className="ri-pencil-line cursor-pointer text-xl"
+          >
+            <i className="ri-delete-bin-line text-xl"></i>
+          </button>
+          <button
+            className="text-blue-500 hover:text-blue-700 transition-colors"
             onClick={() => {
               setSelectedBus(record);
               setShowBusForm(true);
             }}
-          ></i>
+          >
+            <i className="ri-pencil-line text-xl"></i>
+          </button>
         </div>
       ),
     },
@@ -114,41 +174,45 @@ function AdminBuses() {
       <Helmet>
         <title>Buses</title>
       </Helmet>
-      <div>
-        <div className="flex justify-between p-7">
+      <div className="p-4">
+        <div className="flex justify-between w-360 items-center mb-6">
           <PageTitle title="Buses" />
           <button
-            type="submit"
-            className="relative inline-flex items-center justify-start
-                px-10 py-3 overflow-hidden font-bold rounded-full
-                group"
+            type="button"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-300 flex items-center gap-2"
             onClick={() => setShowBusForm(true)}
           >
-            <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
-            <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
-            <span className="relative w-full text-left text-black transition-colors duration-200 ease-in-out group-hover:text-white">
-              Add Bus
-            </span>
-            <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
+            <i className="ri-add-line"></i>
+            Add Bus
           </button>
         </div>
-        <div className="p-7">
+
+        <div className="bg-white rounded-lg shadow">
           <Table
             columns={columns}
             dataSource={buses}
-            pagination={{ pageSize: 7 }}
+            rowKey="_id"
+            loading={loading}
+            pagination={{
+              pageSize: 6,
+              showSizeChanger: true,
+              showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+            }}
+            className="custom-table"
+            scroll={{ x: true }}
           />
-          {showBusForm && (
-            <BusForm
-              showBusForm={showBusForm}
-              setShowBusForm={setShowBusForm}
-              type={selectedBus ? "edit" : "add"}
-              selectedBus={selectedBus}
-              setSelectedBus={setSelectedBus}
-              getData={getBuses}
-            />
-          )}
         </div>
+
+        {showBusForm && (
+          <BusForm
+            showBusForm={showBusForm}
+            setShowBusForm={setShowBusForm}
+            type={selectedBus ? "edit" : "add"}
+            selectedBus={selectedBus}
+            setSelectedBus={setSelectedBus}
+            getData={getBuses}
+          />
+        )}
       </div>
     </>
   );
