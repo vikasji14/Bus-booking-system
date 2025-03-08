@@ -6,6 +6,12 @@ const { v4: uuidv4 } = require("uuid");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const moment = require("moment");
+const Razorpay = require('razorpay');
+
+const instance = new Razorpay({
+  key_id: 'rzp_test_sy54SSBzD8tp1c',
+  key_secret: 'HexTP4IDqL28rOQDlSU5t5oB'
+});
 
 // nodemailer transporter
 let transporter = nodemailer.createTransport({
@@ -182,10 +188,54 @@ const PayWithStripe = async (req, res) => {
     });
   }
 };
+
+const createOrder = async (req, res) => {
+  try {
+    const options = {
+      amount: req.body.amount,
+      currency: 'INR',
+      receipt: 'receipt_' + Date.now()
+    };
+    const order = await instance.orders.create(options);
+    res.status(200).send(order);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+const verifyPayment = async (req, res) => {
+  try {
+    const { paymentId, bookingDetails } = req.body;
+    const payment = await instance.payments.fetch(paymentId);
+
+    if (payment.status === 'captured') {
+      const newBooking = new Booking(bookingDetails);
+      await newBooking.save();
+      res.status(200).send({
+        message: 'Booking successful',
+        data: newBooking,
+        success: true
+      });
+    } else {
+      res.status(400).send({
+        message: 'Payment failed',
+        success: false
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: error.message,
+      success: false
+    });
+  }
+};
+
 module.exports = {
   BookSeat,
   GetAllBookings,
   GetAllBookingsByUser,
   CancelBooking,
   PayWithStripe,
+  createOrder,
+  verifyPayment,
 };

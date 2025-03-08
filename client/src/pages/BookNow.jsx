@@ -5,12 +5,10 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import { Row, Col, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import SeatSelection from "../components/SeatSelection";
-import StripeCheckout from "react-stripe-checkout";
 import { Helmet } from "react-helmet";
 import moment from "moment";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
-
 
 function BookNow() {
   const navigate = useNavigate();
@@ -18,6 +16,8 @@ function BookNow() {
   const params = useParams();
   const dispatch = useDispatch();
   const [bus, setBus] = useState(null);
+  const [user, setUser] = useState((localStorage.getItem("user_id")));
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
   const getBus = useCallback(async () => {
     try {
@@ -35,6 +35,83 @@ function BookNow() {
     }
   }, [dispatch, params.id]);
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => setRazorpayLoaded(true);
+    script.onerror = () => {
+      console.error('Failed to load Razorpay script');
+      message.error('Payment system failed to load. Please refresh the page.');
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handlePayment = async () => {
+    if (!razorpayLoaded) {
+      message.error('Payment system is still loading. Please wait...');
+      return;
+    }
+
+    try {
+      dispatch(ShowLoading());
+      console.log('Initiating payment...');
+
+      const response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/create-order`, {
+        amount: (bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length) * 100
+      });
+
+      console.log('Order created:', response.data);
+
+      const options = {
+        key: 'rzp_test_sy54SSBzD8tp1c',
+        amount: response.data.amount,
+        currency: 'INR',
+        name: 'Bus Booking System',
+        description: 'Bus Ticket Booking',
+        order_id: response.data.id,
+        handler: async function(response) {
+          try {
+            await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/verify-payment`, {
+              paymentId: response.razorpay_payment_id,
+              bookingDetails: {
+                bus: bus._id,
+                user: user,
+                seats: selectedSeats,
+                transactionId: response.razorpay_payment_id
+              }
+            });
+            message.success('Booking successful!');
+            navigate('/bookings');
+          } catch (error) {
+            console.error('Payment verification failed:', error);
+            message.error('Payment verification failed');
+          }
+        },
+        // prefill: {
+        //   name: user.name,
+        //   email: user.email
+        // },
+        theme: {
+          color: '#2563eb'
+        }
+      };
+
+      console.log('Opening Razorpay checkout...');
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Payment error:', error);
+      message.error(error.message);
+    } finally {
+      dispatch(HideLoading());
+    }
+  };
+
   const bookNow = async (transactionId) => {
     try {
       dispatch(ShowLoading());
@@ -50,27 +127,6 @@ function BookNow() {
       if (response.data.success) {
         message.success(response.data.message);
         navigate("/bookings");
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      dispatch(HideLoading());
-      message.error(error.message);
-    }
-  };
-
-  const onToken = async (token) => {
-    try {
-      dispatch(ShowLoading());
-      const response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/make-payment`, {
-        token,
-        amount: selectedSeats.length * bus.price,
-      });
-
-      dispatch(HideLoading());
-      if (response.data.success) {
-        message.success(response.data.message);
-        bookNow(response.data.data.transactionId);
       } else {
         message.error(response.data.message);
       }
@@ -291,33 +347,26 @@ function BookNow() {
                             </div>
                           </div>
 
-                          <StripeCheckout
-                            billingAddress
+                          <button
+                            className={`relative px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 ${selectedSeats.length === 0
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 active:translate-y-0"
+                              }`}
                             disabled={selectedSeats.length === 0}
-                            token={onToken}
-                            amount={(bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length) * 100}
-                            currency="INR"
-                            stripeKey="pk_test_ZT7RmqCIjI0PqcpDF9jzOqAS"
+                            onClick={handlePayment}
                           >
-                            <button
-                              className={`relative px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 ${selectedSeats.length === 0
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 active:translate-y-0"
-                                }`}
-                              disabled={selectedSeats.length === 0}
-                            >
-                              <span className="flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                Pay Now
-                              </span>
-                            </button>
-                          </StripeCheckout>
+                            <span className="flex items-center gap-2">
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                              </svg>
+                              Pay Now
+                            </span>
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </div></Col>
+                  </div>
+                </Col>
 
               </Row>
             </div>
