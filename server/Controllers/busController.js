@@ -3,6 +3,9 @@ const Bus = require("../models/busModel");
 // Add a new bus
 const AddBus = async (req, res) => {
   try {
+    if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
+      return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
+    }
     const existingBus = await Bus.findOne({ busNumber: req.body.busNumber });
     existingBus
       ? res.send({ message: "Bus already exists", success: false, data: null })
@@ -101,7 +104,9 @@ const GetBusesByFromAndTo = async (req, res) => {
 
 // update a bus
 const UpdateBus = async (req, res) => {
-  // if the bus is completed , you can't update it
+  if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
+    return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
+  }
   const bus = await Bus.findById(req.params.id);
   if (bus.status === "Completed") {
     res.status(400).send({

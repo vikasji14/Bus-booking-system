@@ -4,11 +4,12 @@ import moment from "moment";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
 
-
 function Bus({ bus }) {
   const navigate = useNavigate();
+  const discountedPrice = bus.price * (1 - (bus.discountPercentage || 0) / 100);
+
   return (
-    <div className="relative p-6 bg-white  rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 max-w-lg min-w-[350px] w-full">
+    <div className="relative p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 max-w-lg min-w-[350px] w-full">
       {/* Journey Date */}
       <div className="absolute -top-3 left-6">
         <span className="px-4 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
@@ -111,7 +112,15 @@ function Bus({ bus }) {
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{bus.price}</span>
+            {bus.discountPercentage > 0 && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm line-through text-gray-500 dark:text-gray-400">₹{bus.price}</span>
+                <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full dark:bg-red-900/30 dark:text-red-300">
+                  {bus.discountPercentage}% off
+                </span>
+              </div>
+            )}
+            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{discountedPrice.toFixed(2)}</span>
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</span>
           </div>
         </div>

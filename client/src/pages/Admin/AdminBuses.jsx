@@ -117,6 +117,12 @@ function AdminBuses() {
       sorter: (a, b) => new Date(a.journeyDate) - new Date(b.journeyDate),
     },
     {
+      title: "Discount",
+      dataIndex: "discountPercentage",
+      sorter: (a, b) => a.discountPercentage - b.discountPercentage,
+      render: (discount) => `${discount || 0}%`,
+    },
+    {
       title: "Status",
       dataIndex: "status",
       filters: [

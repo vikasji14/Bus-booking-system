@@ -203,6 +203,20 @@ function BusForm({
 
           <Col lg={12} xs={24}>
             <Form.Item
+              label={<span className="text-gray-700 font-medium">Discount Percentage</span>}
+              name="discountPercentage"
+             
+            >
+              <input
+                type="number"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                placeholder="Enter discount percentage (0-100)"
+              />
+            </Form.Item>
+          </Col>
+
+          <Col lg={12} xs={24}>
+            <Form.Item
               label={<span className="text-gray-700 font-medium">Status</span>}
               name="status"
               rules={[{ required: true, message: "Please select status!" }]}

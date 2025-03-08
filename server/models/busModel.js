@@ -45,6 +45,10 @@ const busSchema = new mongoose.Schema({
     type: String,
     default: "Yet to start",
   },
+  discountPercentage: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("buses", busSchema);

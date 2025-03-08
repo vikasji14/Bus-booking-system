@@ -2,6 +2,8 @@ import React from "react";
 
 function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
   const capacity = bus.capacity;
+  const discountedPrice = bus.price * (1 - (bus.discountPercentage || 0) / 100);
+  const totalPrice = selectedSeats.length * discountedPrice;
 
   const selectOrUnselectSeats = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
@@ -13,6 +15,26 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
 
   return (
     <div className="mx-auto">
+      {/* Price Display */}
+      <div className="mb-6 text-center">
+        {bus.discountPercentage > 0 && (
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="text-sm line-through text-gray-500 dark:text-gray-400">
+              ₹{bus.price * selectedSeats.length}
+            </span>
+            <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full dark:bg-red-900/30 dark:text-red-300">
+              {bus.discountPercentage}% off
+            </span>
+          </div>
+        )}
+        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          ₹{totalPrice.toFixed(2)}
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          Total for {selectedSeats.length} seat{selectedSeats.length !== 1 && 's'}
+        </p>
+      </div>
+
       {/* Seat Selection Legend */}
       <div className="flex items-center justify-center gap-4 mb-6">
         <div className="flex items-center gap-2">
