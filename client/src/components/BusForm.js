@@ -59,6 +59,17 @@ function BusForm({
       >
         <Input placeholder="Enter offer (e.g., Get ₹200 off instantly)" />
       </Form.Item>
+      <Form.Item
+        name={[name, 'link']}
+        rules={[
+          {
+            type: 'url',
+            message: 'Please enter a valid URL',
+          },
+        ]}
+      >
+        <Input placeholder="Offer link (optional)" />
+      </Form.Item>
       <MinusCircleOutlined onClick={() => remove(name)} />
     </Space>
   );

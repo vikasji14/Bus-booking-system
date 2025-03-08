@@ -111,35 +111,19 @@ function Bus({ bus }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
-               {/* Offers */}
-        {bus.offers && bus.offers.length > 0 && (
-          <div className="mt-0">
-            <Button
-              type="link"
-              onClick={() => setShowOffers(true)}
-              className="text-blue-500 p-0"
-            >
-              View Offers
-            </Button>
-          </div>
-        )}
-
-        <Modal
-          title="Special Offers"
-          visible={showOffers}
-          onCancel={() => setShowOffers(false)}
-          footer={null}
-        >
-          <div className="space-y-3">
-            {bus.offers?.map((offer, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                {offer.text}
+            
+            {/* Offers */}
+            {bus.offers && bus.offers.length > 0 && (
+              <div className="mt-0">
+                <Button
+                  type="link"
+                  onClick={() => setShowOffers(true)}
+                  className="text-blue-500 p-0"
+                >
+                  View Offers
+                </Button>
               </div>
-            ))}
-          </div>
-        </Modal>
-
-
+            )}
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
@@ -151,12 +135,37 @@ function Bus({ bus }) {
                 </span>
               </div>
             )}
-            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">₹{discountedPrice.toFixed(2)}</span>
+            <span className="text-md font-bold text-blue-600 dark:text-blue-400">₹{discountedPrice.toFixed(2)}</span>
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</span>
           </div>
         </div>
 
-       
+        {/* Modal for Offers */}
+        <Modal
+          title="Special Offers"
+          visible={showOffers}
+          onCancel={() => setShowOffers(false)}
+          footer={null}
+        >
+          <div className="space-y-3">
+            {bus.offers?.map((offer, index) => (
+              <div key={index} className="p-3 flex flex-wrap gap-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-800">{offer.text}</p>
+                {offer.link && (
+                  <a
+                    href={offer.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-red-600"
+                  >
+                    Claim Offer
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </Modal>
+
         {/* Book Now Button */}
         <button
           className="w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700"
