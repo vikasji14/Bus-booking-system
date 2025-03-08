@@ -112,7 +112,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={12} xs={24}>
+          <Col lg={12} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Bus Number</span>}
               name="busNumber"
@@ -126,7 +126,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={12} xs={24}>
+          <Col lg={12} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Capacity</span>}
               name="capacity"
@@ -188,7 +188,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={8} xs={24}>
+          <Col lg={8} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Departure Time</span>}
               name="departure"
@@ -201,7 +201,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={8} xs={24}>
+          <Col lg={8} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Arrival Time</span>}
               name="arrival"
@@ -214,7 +214,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={12} xs={24}>
+          <Col lg={8} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Price</span>}
               name="price"
@@ -228,7 +228,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={12} xs={24}>
+          <Col lg={8} xs={12}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Discount Percentage</span>}
               name="discountPercentage"
@@ -242,7 +242,7 @@ function BusForm({
             </Form.Item>
           </Col>
 
-          <Col lg={12} xs={24}>
+          <Col lg={8} xs={24}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Status</span>}
               name="status"

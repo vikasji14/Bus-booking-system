@@ -105,12 +105,13 @@ function Bus({ bus }) {
 
         {/* Features and Price */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-col md:flex-row items-center space-x-3">
             <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-lg dark:bg-gray-700">
               <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
+              </div>
             
             {/* Offers */}
             {bus.offers && bus.offers.length > 0 && (
@@ -118,13 +119,12 @@ function Bus({ bus }) {
                 <Button
                   type="link"
                   onClick={() => setShowOffers(true)}
-                  className="text-blue-500 p-0"
+                  className="text-blue-500 p-0 hover:text-blue-800 hover:font-bold"
                 >
                   View Offers
                 </Button>
               </div>
             )}
-            </div>
           </div>
           <div className="text-right flex flex-col items-end">
             {bus.discountPercentage > 0 && (
