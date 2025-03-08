@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Modal, Row, Form, Col, message } from "antd";
+import { Modal, Row, Form, Col, message, Input, Button, DatePicker, Select, InputNumber, Space } from "antd";
+import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 
@@ -14,6 +15,8 @@ function BusForm({
 }) {
   const dispatch = useDispatch();
   const [cities, setCities] = useState([]);
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   const onFinish = async (values) => {
     try {
@@ -48,6 +51,18 @@ function BusForm({
     });
   }, []);
 
+  const OfferInput = ({ name, remove }) => (
+    <Space key={name} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+      <Form.Item
+        name={[name, 'text']}
+        rules={[{ required: true, message: 'Please enter an offer' }]}
+      >
+        <Input placeholder="Enter offer (e.g., Get ₹200 off instantly)" />
+      </Form.Item>
+      <MinusCircleOutlined onClick={() => remove(name)} />
+    </Space>
+  );
+
   return (
     <Modal
       width={800}
@@ -65,9 +80,10 @@ function BusForm({
       footer={false}
     >
       <Form 
+        form={form}
         layout="vertical" 
         onFinish={onFinish} 
-        initialValues={selectedBus}
+        initialValues={selectedBus || { offers: [] }}
         className="pt-4"
       >
         <Row gutter={[24, 0]}>
@@ -227,6 +243,29 @@ function BusForm({
                 <option value="running">Running</option>
                 <option value="Completed">Completed</option>
               </select>
+            </Form.Item>
+          </Col>
+
+          <Col lg={24} xs={24}>
+            <Form.Item label={<span className="text-gray-700 font-medium">Offers</span>}>
+              <Form.List name="offers">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map((field) => (
+                      <OfferInput key={field.key} {...field} remove={remove} />
+                    ))}
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      block
+                      icon={<PlusOutlined />}
+                      className="mt-2"
+                    >
+                      Add Offer
+                    </Button>
+                  </>
+                )}
+              </Form.List>
             </Form.Item>
           </Col>
         </Row>

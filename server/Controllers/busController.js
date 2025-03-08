@@ -3,17 +3,23 @@ const Bus = require("../models/busModel");
 // Add a new bus
 const AddBus = async (req, res) => {
   try {
+    const { offers } = req.body;
+    const bus = new Bus({
+      ...req.body,
+      offers: offers || [],
+    });
     if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
       return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
     }
     const existingBus = await Bus.findOne({ busNumber: req.body.busNumber });
     existingBus
       ? res.send({ message: "Bus already exists", success: false, data: null })
-      : await new Bus(req.body).save();
+      : await bus.save();
 
     res.status(200).send({
       message: "Bus created successfully",
       success: true,
+      data: bus,
     });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
@@ -104,29 +110,38 @@ const GetBusesByFromAndTo = async (req, res) => {
 
 // update a bus
 const UpdateBus = async (req, res) => {
-  if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
-    return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
-  }
-  const bus = await Bus.findById(req.params.id);
-  if (bus.status === "Completed") {
-    res.status(400).send({
-      message: "You can't update a completed bus",
-      success: false,
-    });
-  } else {
-    try {
-      await Bus.findByIdAndUpdate(req.params.id, req.body);
-      res.status(200).send({
-        message: "Bus updated successfully",
-        success: true,
-      });
-    } catch (error) {
-      res.status(500).send({
-        message: "Bus not found",
+  try {
+    const { offers } = req.body;
+    if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
+      return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
+    }
+    const bus = await Bus.findById(req.params.id);
+    if (bus.status === "Completed") {
+      res.status(400).send({
+        message: "You can't update a completed bus",
         success: false,
-        data: error,
+      });
+    } else {
+      const updatedBus = await Bus.findByIdAndUpdate(
+        req.params.id,
+        {
+          ...req.body,
+          offers: offers || [],
+        },
+        { new: true }
+      );
+      res.status(200).send({
+        success: true,
+        message: "Bus updated successfully",
+        data: updatedBus,
       });
     }
+  } catch (error) {
+    res.status(500).send({
+      message: "Bus not found",
+      success: false,
+      data: error,
+    });
   }
 };
 
@@ -170,7 +185,6 @@ const allBusList = async (req, res) => {
     res.status(500).json({ success: false, message:"error" });
   }
 };
-
 
 module.exports = {
   AddBus,

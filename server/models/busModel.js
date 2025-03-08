@@ -49,6 +49,11 @@ const busSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  offers: [
+    {
+      text: String,
+    }
+  ],
 });
 
 module.exports = mongoose.model("buses", busSchema);

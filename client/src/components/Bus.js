@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
+import { Modal, Button } from "antd";
 
 function Bus({ bus }) {
   const navigate = useNavigate();
   const discountedPrice = bus.price * (1 - (bus.discountPercentage || 0) / 100);
+  const [showOffers, setShowOffers] = useState(false);
 
   return (
     <div className="relative p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 max-w-lg min-w-[350px] w-full">
@@ -20,7 +22,7 @@ function Bus({ bus }) {
       {/* Bus Status Badge */}
       <div className="absolute -top-3 right-6">
         <span className={`px-4 py-1 rounded-full text-sm font-medium ${
-          bus.status === "Yet To Start" 
+          bus.status === "Yet To Start"
             ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
             : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
         }`}>
@@ -29,7 +31,7 @@ function Bus({ bus }) {
       </div>
 
       {/* Bus Info */}
-      <div className="space-y-6 pt-4">
+      <div className="space-y-6 ">
         {/* Bus Name and Type */}
         <div className="flex justify-between items-start">
           <div>
@@ -102,13 +104,42 @@ function Bus({ bus }) {
         </div>
 
         {/* Features and Price */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center space-x-3">
             <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-lg dark:bg-gray-700">
               <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
               <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
+               {/* Offers */}
+        {bus.offers && bus.offers.length > 0 && (
+          <div className="mt-0">
+            <Button
+              type="link"
+              onClick={() => setShowOffers(true)}
+              className="text-blue-500 p-0"
+            >
+              View Offers
+            </Button>
+          </div>
+        )}
+
+        <Modal
+          title="Special Offers"
+          visible={showOffers}
+          onCancel={() => setShowOffers(false)}
+          footer={null}
+        >
+          <div className="space-y-3">
+            {bus.offers?.map((offer, index) => (
+              <div key={index} className="p-3 bg-gray-50 rounded-lg">
+                {offer.text}
+              </div>
+            ))}
+          </div>
+        </Modal>
+
+
             </div>
           </div>
           <div className="text-right flex flex-col items-end">
@@ -120,11 +151,12 @@ function Bus({ bus }) {
                 </span>
               </div>
             )}
-            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{discountedPrice.toFixed(2)}</span>
+            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">₹{discountedPrice.toFixed(2)}</span>
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</span>
           </div>
         </div>
 
+       
         {/* Book Now Button */}
         <button
           className="w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700"
