@@ -90,7 +90,7 @@ function BookNow() {
       </Helmet>
       <div>
         {bus && (
-          <div className="max-w-7xl mx-auto p-4">
+          <div className="max-w-7xl mx-auto">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
               <Row gutter={[30, 30]}>
                 <Col lg={12} xs={24} sm={24}>
@@ -232,7 +232,7 @@ function BookNow() {
 
                     <Col lg={24} xs={24} sm={24}>
                       <div className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Select Your Seats</h2>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Choose Your Seats</h2>
                         <SeatSelection
                           selectedSeats={selectedSeats}
                           setSelectedSeats={setSelectedSeats}
@@ -252,7 +252,7 @@ function BookNow() {
                           <div className="mt-1 flex flex-wrap gap-2">
                             {selectedSeats.length > 0 ? (
                               selectedSeats.map((seat) => (
-                                <span key={seat} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                                <span key={seat} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
                                   Seat {seat}
                                 </span>
                               ))
@@ -262,12 +262,32 @@ function BookNow() {
                           </div>
                         </div>
 
+                        <div>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">Price Breakdown</p>
+                          <div className="space-y-1 text-sm">
+                            <div className="flex justify-between">
+                              <span>Original Price ({selectedSeats.length} seats):</span>
+                              <span>₹{(bus.price * selectedSeats.length).toFixed(2)}</span>
+                            </div>
+                            {bus.discountPercentage > 0 && (
+                              <div className="flex justify-between">
+                                <span>Discount ({bus.discountPercentage}%):</span>
+                                <span className="text-red-600">- ₹{(bus.price * selectedSeats.length * (bus.discountPercentage / 100)).toFixed(2)}</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between border-t pt-1">
+                              <span className="font-medium">Total Amount:</span>
+                              <span className="font-medium text-blue-600">₹{(bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="flex items-end justify-between border-t dark:border-gray-700 pt-4">
                           <div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Total Amount</p>
-                            <div className="mt-1 flex items-baseline">
-                              <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">₹ {(bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length).toFixed(2)}</span>
-                              <span className="ml-1 text-sm text-gray-500 dark:text-gray-400"> {selectedSeats.length} seats</span>
+                            <div className="mt-1 flex flex-col gap-1 items-baseline">
+                              <span className="text-sm text-gray-500 dark:text-gray-400">Total Amount</span>
+
+                              <span className="text-xl font-bold text-blue-600 dark:text-blue-400">₹ {(bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length).toFixed(2)}</span>
                             </div>
                           </div>
 

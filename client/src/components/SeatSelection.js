@@ -35,33 +35,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
         </p>
       </div>
 
-      {/* Seat Selection Legend */}
-      <div className="flex items-center justify-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-400 shadow-inner">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Available</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-400 to-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Selected</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-red-400 to-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </div>
-          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Booked</span>
-        </div>
-      </div>
+     
 
       {/* Bus Layout */}
       <div className="relative max-w-sm mx-auto">
@@ -73,7 +47,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
               let seatClass = bus.seatsBooked.includes(seatNumber + 1)
                 ? "bg-gradient-to-br from-red-400 to-red-500 text-white shadow-lg shadow-red-500/30"
                 : selectedSeats.includes(seatNumber + 1)
-                ? "bg-gradient-to-br from-blue-400 to-blue-500 text-white shadow-lg shadow-blue-500/30 hover:from-blue-500 hover:to-blue-600"
+                ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:from-blue-600 hover:to-blue-700"
                 : "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300 hover:from-gray-200 hover:to-gray-300 dark:hover:from-gray-600 dark:hover:to-gray-500 shadow-inner";
 
               return (
@@ -126,6 +100,36 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
             Click on a seat to select/unselect it
           </p>
         </div>
+
+         {/* Seat Selection Legend */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-sm bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex flex-col justify-end p-1 shadow-inner hover:shadow-lg transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95">
+            <div className="w-full h-1/2 rounded-t-sm bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-500"></div>
+            <div className="w-full h-1/2 rounded-b-sm bg-gradient-to-t from-gray-300 to-gray-200 dark:from-gray-500 dark:to-gray-600"></div>
+          </div>
+          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Available</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-sm bg-gradient-to-br from-blue-500 to-blue-600 flex flex-col justify-end p-1 shadow-lg shadow-blue-500/30 hover:shadow-blue-600/40 transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95 relative">
+            <div className="w-full h-1/2 rounded-t-sm bg-gradient-to-b from-blue-400 to-blue-500"></div>
+            <div className="w-full h-1/2 rounded-b-sm bg-gradient-to-t from-blue-500 to-blue-400"></div>
+            <div className="absolute inset-0 flex items-center justify-center text-white animate-bounce">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Selected</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-sm bg-gradient-to-br from-red-400 to-red-500 flex flex-col justify-end p-1 shadow-lg shadow-red-500/30 hover:shadow-red-600/40 transition-all duration-200 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95">
+            <div className="w-full h-1/2 rounded-t-sm bg-gradient-to-b from-red-300 to-red-400"></div>
+            <div className="w-full h-1/2 rounded-b-sm bg-gradient-to-t from-red-400 to-red-300"></div>
+          </div>
+          <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Booked</span>
+        </div>
+      </div>
       </div>
 
       <style jsx>{`
