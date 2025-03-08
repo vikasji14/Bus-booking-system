@@ -27,30 +27,67 @@ const BookSeat = async (req, res) => {
   try {
     const newBooking = new Booking({
       ...req.body, // spread operator to get all the data from the request body
-      user: req.params.userId,
+      user: req.user.toString(),
     });
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.user.toString());
     // res.json(user._id)
-    await newBooking.save();
-    const bus = await Bus.findById(req.body.bus); // get the bus from the request body
-    bus.seatsBooked = [...bus.seatsBooked, ...req.body.seats]; // add the booked seats to the bus seatsBooked array in the database
+    // await newBooking.save();  
+    const bus = await Bus.findById(req.bus.toString()); // get the bus from the request body
+    bus.seatsBooked = [...bus.seatsBooked, ...req.seats]; // add the booked seats to the bus seatsBooked array in the database
 
     await bus.save();
     // send email to user with the booking details
     let mailOptions = {
       from: process.env.EMAIL,
       to: user.email,
-      subject: "Booking Details",
-      text: `Hello ${user.name}, your booking details are as follows:
-      Bus: ${bus.name}
-      Seats: ${req.body.seats}
-      Departure Time: ${moment(bus.departure, "HH:mm:ss").format("hh:mm A")}
-      Arrival Time: ${moment(bus.arrival, "HH:mm:ss").format("hh:mm A")}
-      Journey Date: ${bus.journeyDate}
-      Total Price: ${bus.price * req.body.seats.length} MAD
-      Thank you for choosing us! 
+      subject: "🚍 Your Bus Booking Confirmation",
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9; animation: fadeIn 2s ease-in-out;">
+        
+        <h2 style="color: #2c3e50; text-align: center;">🚌 Booking Confirmation</h2>
+        
+        <p>Hello <strong>${user.name}</strong>,</p>
+        <p>Your booking details are as follows:</p>
+    
+        <div style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); animation: scaleUp 1.5s ease-in-out;">
+          <p style="margin: 5px 0; font-weight: bold; text-align: center; font-size: 24px;">${bus.name}</p>
+          <p><strong>📅 Journey Date:</strong> ${bus.journeyDate}</p>
+          <p><strong>⏰ Departure Time:</strong> ${moment(bus.departure, "HH:mm:ss").format("hh:mm A")}</p>
+          <p><strong>🏁 Arrival Time:</strong> ${moment(bus.arrival, "HH:mm:ss").format("hh:mm A")}</p>
+          <p><strong>🎟️ Seat(s):</strong> ${req.seats.join(", ")}</p>
+        </div>
+    
+        <p style="text-align: center; margin-top: 15px;">Thank you for choosing us! 😊</p>
+        
+        <div style="text-align: center;">
+          <a href="https://yourbookinglink.com" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; animation: pulse 2s infinite;">
+            View Booking Details
+          </a>
+        </div>
+    
+        <p style="text-align: center; margin-top: 20px;"><strong>Happy Journey! 🚀</strong></p>
+    
+        <style>
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes scaleUp {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+          }
+        </style>
+    
+      </div>
       `,
     };
+    
+    
     transporter.sendMail(mailOptions, (err, data) => {
       if (err) {
         console.log("Error Occurs", err);
@@ -58,20 +95,8 @@ const BookSeat = async (req, res) => {
         console.log("Email sent!!!");
       }
     });
-    res.status(200).send({
-      message: "Seat booked successfully",
-      data: newBooking,
-      user: user._id,
-      success: true,
-    });
   } catch (error) {
     console.log(error);
-
-    res.status(500).send({
-      message: "Booking failed",
-      data: error,
-      success: false,
-    });
   }
 };
 
@@ -211,6 +236,8 @@ const verifyPayment = async (req, res) => {
     if (payment.status === 'captured') {
       const newBooking = new Booking(bookingDetails);
       await newBooking.save();
+
+      BookSeat(newBooking);
       res.status(200).send({
         message: 'Booking successful',
         data: newBooking,

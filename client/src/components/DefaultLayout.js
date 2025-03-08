@@ -59,6 +59,13 @@ function DefaultLayout({ children }) {
         <i className="ri-ticket-line  text-xl"></i>
         <span className="md:inline">Booking</span>
       </Link>
+      <Link
+        to="/bookings"
+        className="text-white hover:text-gray-300 flex items-center gap-2"
+      >
+        <i className="ri-ticket-line  text-xl"></i>
+        <span className="md:inline">Ticket</span>
+      </Link>
 
       {user?.isAdmin ? (
         <div className="relative">

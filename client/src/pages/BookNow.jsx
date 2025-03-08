@@ -18,6 +18,7 @@ function BookNow() {
   const [bus, setBus] = useState(null);
   const [user, setUser] = useState((localStorage.getItem("user_id")));
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+  console.log("bus",bus)
 
   const getBus = useCallback(async () => {
     try {
@@ -65,7 +66,7 @@ function BookNow() {
         amount: (bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length) * 100
       });
 
-      console.log('Order created:', response.data);
+      // console.log('Order created:', response.data);
 
       const options = {
         key: 'rzp_test_sy54SSBzD8tp1c',
