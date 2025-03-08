@@ -110,9 +110,9 @@ function Bus({ bus }) {
               <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
             </div>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{bus.price}</p>
-            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</p>
+          <div className="text-right flex flex-col items-end">
+            <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">₹{bus.price}</span>
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">per seat</span>
           </div>
         </div>
 
