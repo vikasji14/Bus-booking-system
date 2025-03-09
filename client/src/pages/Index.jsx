@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
-import { Row, Col, message } from "antd";
+import { Row, Col, message, Button } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 function Index() {
@@ -15,6 +15,11 @@ function Index() {
   const [filters, setFilters] = useState({});
   const [allBuses, setAllBuses] = useState([]);
   const [status, setStatus] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6); // Show only 6 initially
+
+  const handleSeeMore = () => {
+    setVisibleCount((prev) => prev + 6); // Load 6 more buses on click
+  };
   const getBusesByFilter = useCallback(async () => {
     dispatch(ShowLoading());
     const from = filters.from;
@@ -70,7 +75,7 @@ function Index() {
         <div className="flex flex-col-reverse md:flex-row bg-gray-900">
 
           <div
-            className="hero lg:flex w-full lg:w-3/4"
+            className="hero hidden sm:block lg:flex w-full lg:w-3/4"
             style={{
               backgroundImage: `url("https://cdn.dribbble.com/users/1976094/screenshots/4687414/buss_trvl.gif")`,
               backgroundSize: "cover",
@@ -83,7 +88,7 @@ function Index() {
               <div className="h-screen overflow-auto overflow-x-hidden">
 
                 <div className="bg-opacity-80">
-                  <Row gutter={[15, 15]}>
+                  <Row gutter={[10, 10]}>
                     {/* {
                       buses.length != 0 && (
                         <div className="flex opacity-80 justify-center mx-auto mt-2 items-center">
@@ -94,7 +99,7 @@ function Index() {
 
                     {buses.map((bus, index) => {
                       return (
-                        <div key={index} className="w-screen p-10 ">
+                        <div key={index} className="w-screen p-10 w-full md:w-6/12">
                           <Bus bus={bus} />
                         </div>
                       );
@@ -171,21 +176,29 @@ function Index() {
                     </select>
                   </Col>
                   <Col lg={24} sm={24}>
-                    <input
-                      className="mb-5 input input-bordered input-primary w-full max-w-xs"
-                      min={new Date().toISOString().split("T")[0]}
-                      type="date"
-                      placeholder="Date"
-                      onChange={(e) => {
-                        setFilters({
-                          ...filters,
-                          journeyDate: e.target.value,
-                        });
-                      }}
-                    />
+                    <div className="relative w-full max-w-xs">
+                      {/* Label inside a bordered box */}
+                      <div className="absolute -top-1  left-0  text-black bg-white font-semibold px-2 rounded-md">
+                        Choose date of journey
+                      </div>
+
+                      {/* Date Input Field */}
+                      <input
+                        className="input input-bordered input-primary w-full max-w-xs mt-2 border-2 border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                        min={new Date().toISOString().split("T")[0]}
+                        type="date"
+                        onChange={(e) => {
+                          setFilters({
+                            ...filters,
+                            journeyDate: e.target.value,
+                          });
+                        }}
+                      />
+                    </div>
+
                   </Col>
                   <Col lg={24} sm={24}>
-                    <div className="flex justify-center gap-4">
+                    <div className="flex mt-4 justify-center gap-4">
                       <button
                         onClick={() => {
                           getBusesByFilter();
@@ -227,15 +240,26 @@ function Index() {
         </div>
 
         <div className="bg-slate-900">
-          <Row gutter={[15, 15]}>
-            {allBuses.map((bus, index) => {
-              return (
-                <div key={index} className="w-full md:w-2/4 p-10 ">
-                  <Bus bus={bus} />
-                </div>
-              );
-            })}
-          </Row>
+        <Row gutter={[15, 15]}>
+        {allBuses.slice(0, visibleCount).map((bus, index) => (
+          <div key={index} className="w-full p-10 md:w-4/12">
+            <Bus bus={bus} />
+          </div>
+        ))}
+      </Row>
+
+      {/* "See More" Button - Only show if more buses are available */}
+      {visibleCount < allBuses.length && (
+        <div className="text-center mt-5 mb-5">
+          <Button
+  type="primary"
+  className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg transition-all duration-300 transform hover:bg-blue-700 hover:scale-105 active:scale-95 active:bg-blue-800"
+  onClick={handleSeeMore}
+>
+  See More
+</Button>
+        </div>
+      )}
         </div>
 
       </div>
