@@ -20,6 +20,21 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    mobile: {
+      type: String,
+      required: [true, 'Mobile number is required'],
+      validate: {
+        validator: function(v) {
+          return /^[6-9]\d{9}$/.test(v);
+        },
+        message: props => `${props.value} is not a valid Indian mobile number!`
+      }
+    },
+    address: {
+      type: String,
+      trim: true,
+      maxlength: [200, 'Address cannot be more than 200 characters']
+    }
   },
   {
     timestamps: true,

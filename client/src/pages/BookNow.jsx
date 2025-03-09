@@ -19,7 +19,33 @@ function BookNow() {
   const [bus, setBus] = useState(null);
   const [user, setUser] = useState((localStorage.getItem("user_id")));
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
-  console.log("bus",bus)
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [mobileError, setMobileError] = useState('');
+  const [addressError, setAddressError] = useState('');
+  const [isMobileValid, setIsMobileValid] = useState(false);
+  // console.log("bus",bus)
+
+  useEffect(() => {
+    const regex = /^[6-9]\d{9}$/;
+    if (!regex.test(mobile)) {
+      setMobileError("Please enter a valid 10-digit Indian mobile number");
+      setIsMobileValid(false);
+    } else {
+      setMobileError("");
+      setIsMobileValid(true);
+    }
+  }, [mobile]);
+
+  // Validate address
+  const validateAddress = (text) => {
+    if (text.length > 200) {
+      setAddressError('Address cannot exceed 200 characters');
+      return false;
+    }
+    setAddressError('');
+    return true;
+  };
 
   const getBus = useCallback(async () => {
     try {
@@ -67,7 +93,7 @@ function BookNow() {
         amount: (bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length) * 100
       });
 
-      // console.log('Order created:', response.data);
+      console.log('Order created:', response.data);
 
       const options = {
         key: 'rzp_test_sy54SSBzD8tp1c',
@@ -76,7 +102,7 @@ function BookNow() {
         name: 'Bus Booking System',
         description: 'Bus Ticket Booking',
         order_id: response.data.id,
-        handler: async function(response) {
+        handler: async function (response) {
           try {
             await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/verify-payment`, {
               paymentId: response.razorpay_payment_id,
@@ -84,6 +110,8 @@ function BookNow() {
                 bus: bus._id,
                 user: user,
                 seats: selectedSeats,
+                mobile: mobile,
+                address: address,
                 transactionId: response.razorpay_payment_id
               }
             });
@@ -339,6 +367,52 @@ function BookNow() {
                             </div>
                           </div>
                         </div>
+                        <div>
+                          
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Mobile Number <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="tel"
+                              value={mobile}
+                              onChange={(e) => {
+                                setMobile(e.target.value);
+                                // validateMobile(e.target.value);
+                              }}
+                              className={`w-full px-3 py-2 border ${mobileError ? 'border-red-500' : 'border-gray-300'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                              placeholder="Enter your mobile number"
+                              maxLength="10"
+                            />
+                            {mobileError && (
+                              <p className="text-sm text-red-500 mt-1">{mobileError}</p>
+                            )}
+                          </div>
+
+                          <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Address (Optional)
+                            </label>
+                            <textarea
+                              value={address}
+                              onChange={(e) => {
+                                setAddress(e.target.value);
+                                validateAddress(e.target.value);
+                              }}
+                              className={`w-full px-3 py-2 border ${addressError ? 'border-red-500' : 'border-gray-300'
+                                } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                              placeholder="Enter your address"
+                              rows="3"
+                              maxLength="200"
+                            ></textarea>
+                            {addressError && (
+                              <p className="text-sm text-red-500 mt-1">{addressError}</p>
+                            )}
+                          </div>
+
+
+                        </div>
 
                         <div className="flex items-end justify-between border-t dark:border-gray-700 pt-4">
                           <div>
@@ -349,13 +423,16 @@ function BookNow() {
                             </div>
                           </div>
 
+
+
                           <button
-                            className={`relative px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 ${selectedSeats.length === 0
+                            className={`relative px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 ${selectedSeats.length === 0 || !isMobileValid
                               ? "bg-gray-400 cursor-not-allowed"
                               : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 active:translate-y-0"
                               }`}
-                            disabled={selectedSeats.length === 0}
+                            disabled={selectedSeats.length ===0 || !isMobileValid}
                             onClick={handlePayment}
+                            
                           >
                             <span className="flex items-center gap-2">
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
