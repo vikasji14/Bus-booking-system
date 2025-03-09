@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet";
 import moment from "moment";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
+import Footer from "../components/Footer";
 
 function BookNow() {
   const navigate = useNavigate();
@@ -374,6 +375,7 @@ function BookNow() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }

@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
+import Footer from '../components/Footer';
+import Partner from '../components/Partner';
 import { Row, Col, message, Button } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -240,29 +242,37 @@ function Index() {
         </div>
 
         <div className="bg-slate-900">
-        <Row gutter={[15, 15]}>
-        {allBuses.slice(0, visibleCount).map((bus, index) => (
-          <div key={index} className="w-full p-10 md:w-4/12">
-            <Bus bus={bus} />
-          </div>
-        ))}
-      </Row>
+          <Row gutter={[15, 15]}>
+            {allBuses.slice(0, visibleCount).map((bus, index) => (
+              <div key={index} className="w-full p-10 md:w-4/12">
+                <Bus bus={bus} />
+              </div>
+            ))}
+          </Row>
 
-      {/* "See More" Button - Only show if more buses are available */}
-      {visibleCount < allBuses.length && (
-        <div className="text-center mt-5 mb-5">
-          <Button
-  type="primary"
-  className="bg-blue-600 text-white font-bold px-6 py-2 rounded-lg transition-all duration-300 transform hover:bg-blue-700 hover:scale-105 active:scale-95 active:bg-blue-800"
-  onClick={handleSeeMore}
->
-  See More
-</Button>
-        </div>
-      )}
+          {/* "See More" Button - Only show if more buses are available */}
+          {visibleCount < allBuses.length && (
+            <div className="flex mt-4 mb-4 justify-center gap-4">
+              <button
+                onClick={handleSeeMore}
+                className="relative inline-flex items-center justify-start
+                    px-10 py-3 overflow-hidden font-bold rounded-full
+                    group"
+              >
+                <span className="w-32 h-32 rotate-45 translate-x-12 -translate-y-2 absolute left-0 top-0 bg-white opacity-[3%]"></span>
+                <span className="absolute top-0 left-0 w-48 h-48 -mt-1 transition-all duration-500 ease-in-out rotate-45 -translate-x-56 -translate-y-24 bg-blue-600 opacity-100 group-hover:-translate-x-8"></span>
+                <span className="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white">
+                  See More Bus...
+                </span>
+                <span className="gap-5 absolute inset-0 border-2 border-blue-600 rounded-full"></span>
+              </button>
+            </div>
+          )}
+          <Partner />
         </div>
 
       </div>
+      <Footer />
     </>
   );
 }

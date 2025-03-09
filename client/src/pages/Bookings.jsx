@@ -13,6 +13,7 @@ import { SearchOutlined, UserOutlined, CarOutlined } from "@ant-design/icons";
 import html2pdf from 'html2pdf.js';
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
+import Footer from "../components/Footer";
 
 function Bookings() {
   const [showPrintModal, setShowPrintModal] = useState(false);
@@ -403,6 +404,7 @@ function Bookings() {
           </Modal>
         )}
       </div>
+      <Footer/>
     </>
   );
 }

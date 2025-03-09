@@ -6,6 +6,7 @@ import Bus from "../components/Bus";
 import { Row, Col, message } from "antd";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+import Footer from "../components/Footer";
 
 function Home() {
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ function Home() {
       <Helmet>
         <title>Home</title>
       </Helmet>
-      <div className="overflow-x-hidden">
+      <div className="overflow-x-hidden mb-8">
         <div className="max-w-4xl mx-auto my-8">
           <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6 text-center">Find Your Bus</h2>
@@ -186,6 +187,7 @@ function Home() {
           </Row>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }
