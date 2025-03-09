@@ -60,7 +60,7 @@ const BookSeat = async (req, res) => {
         <p style="text-align: center; margin-top: 15px;">Thank you for choosing us! 😊</p>
         
         <div style="text-align: center;">
-          <a href="https://yourbookinglink.com" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; animation: pulse 2s infinite;">
+          <a href="https://bus-booking-system-1bk7.vercel.app/bookings" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; animation: pulse 2s infinite;">
             View Booking Details
           </a>
         </div>
