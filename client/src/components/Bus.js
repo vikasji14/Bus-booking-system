@@ -21,11 +21,10 @@ function Bus({ bus }) {
 
       {/* Bus Status Badge */}
       <div className="absolute -top-3 right-6">
-        <span className={`px-4 py-1 rounded-full text-sm font-medium ${
-          bus.status === "Yet To Start"
+        <span className={`px-4 py-1 rounded-full text-sm font-medium ${bus.status === "Yet To Start"
             ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
             : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
-        }`}>
+          }`}>
           {bus.status}
         </span>
       </div>
@@ -56,7 +55,7 @@ function Bus({ bus }) {
               <div className="absolute left-0 top-1/2 transform -translate-y-1/2 animate-[rightMove_4s_linear_infinite] group">
                 <div className="relative -top-2">
                   <svg className="w-7 h-7 text-blue-600 dark:text-blue-400 transform -scale-x-100 drop-shadow-lg group-hover:text-blue-700 transition-colors duration-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 10a1 1 0 100 2 1 1 0 000-2m8 0a1 1 0 100 2 1 1 0 000-2m-2.5-4h-3a.5.5 0 000 1h3a.5.5 0 000-1M21 11.5V9c0-3.5-3.6-4-8-4s-8 .5-8 4v2.5c0 .3-.2.5-.5.5h-1c-.3 0-.5.2-.5.5v2c0 .3.2.5.5.5H4c.3 0 .5-.2.5-.5V12c0-.3.2-.5.5-.5h14c.3 0 .5.2.5.5v2.5c0 .3.2.5.5.5h.5c.3 0 .5-.2.5-.5v-2c0-.3-.2-.5-.5-.5h-1c-.3 0-.5-.2-.5-.5M7 6.7c-.2-.2-.3-.4-.3-.7 0-.5.4-1 1-1h8.6c.6 0 1 .4 1 1 0 .3-.1.5-.3.7-.2.2-.4.3-.7.3H7.7c-.3 0-.5-.1-.7-.3m.8 10.2C6.8 17 6 16.2 6 15.2s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7m8.5 0c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7"/>
+                    <path d="M8 10a1 1 0 100 2 1 1 0 000-2m8 0a1 1 0 100 2 1 1 0 000-2m-2.5-4h-3a.5.5 0 000 1h3a.5.5 0 000-1M21 11.5V9c0-3.5-3.6-4-8-4s-8 .5-8 4v2.5c0 .3-.2.5-.5.5h-1c-.3 0-.5.2-.5.5v2c0 .3.2.5.5.5H4c.3 0 .5-.2.5-.5V12c0-.3.2-.5.5-.5h14c.3 0 .5.2.5.5v2.5c0 .3.2.5.5.5h.5c.3 0 .5-.2.5-.5v-2c0-.3-.2-.5-.5-.5h-1c-.3 0-.5-.2-.5-.5M7 6.7c-.2-.2-.3-.4-.3-.7 0-.5.4-1 1-1h8.6c.6 0 1 .4 1 1 0 .3-.1.5-.3.7-.2.2-.4.3-.7.3H7.7c-.3 0-.5-.1-.7-.3m.8 10.2C6.8 17 6 16.2 6 15.2s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7m8.5 0c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.9 1.7-1.8 1.7" />
                   </svg>
                 </div>
               </div>
@@ -112,10 +111,10 @@ function Bus({ bus }) {
               </svg>
               <span className="text-xs font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
               <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full dark:bg-red-900/30 dark:text-red-300">
-                  {bus.capacity - bus.seatsBooked.length} left
-                </span>
-              </div>
-            
+                {bus.capacity - bus.seatsBooked.length} left
+              </span>
+            </div>
+
             {/* Offers */}
             {bus.offers && bus.offers.length > 0 && (
               <div className="mt-0">
