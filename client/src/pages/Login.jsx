@@ -26,7 +26,8 @@ function Login() {
         } else if (idTrip == null) {
           navigate("/bookings");
         } else if (idTrip !== null) {
-          navigate(`/book-now/${idTrip}`);
+          // navigate(`/book-now/${idTrip}`);
+          navigate(`/easy-booking`)
         }
       } else {
         message.error(response.data.message);

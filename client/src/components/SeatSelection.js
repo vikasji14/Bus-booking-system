@@ -1,6 +1,6 @@
 import React from "react";
 
-function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
+function SeatSelection({ selectedSeats, setSelectedSeats, bus, journeyDate }) {
   const capacity = bus.capacity;
   const discountedPrice = bus.price * (1 - (bus.discountPercentage || 0) / 100);
   const totalPrice = selectedSeats.length * discountedPrice;
@@ -12,6 +12,9 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
       setSelectedSeats([...selectedSeats, seatNumber]);
     }
   };
+
+  let bookedSeats = bus?.seatsBooked?.filter((seat) => seat.date === journeyDate);
+  bookedSeats = bookedSeats[0]?.seats
 
   return (
     <div className="mx-auto">
@@ -44,7 +47,7 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
         <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
           <div className="grid grid-cols-4 gap-2 p-4 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-inner border border-gray-100 dark:border-gray-700">
             {Array.from(Array(capacity).keys()).map((seatNumber) => {
-              let seatClass = bus.seatsBooked.includes(seatNumber + 1)
+              let seatClass = bookedSeats?.includes(seatNumber + 1)
                 ? "bg-gradient-to-br from-red-400 to-red-500 text-white shadow-lg shadow-red-500/30"
                 : selectedSeats.includes(seatNumber + 1)
                 ? "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:from-blue-600 hover:to-blue-700"
@@ -54,13 +57,13 @@ function SeatSelection({ selectedSeats, setSelectedSeats, bus }) {
                 <div
                   key={seatNumber + 1}
                   className={`relative group ${
-                    bus.seatsBooked.includes(seatNumber + 1) ? "cursor-not-allowed" : "cursor-pointer"
+                    bookedSeats?.includes(seatNumber + 1) ? "cursor-not-allowed" : "cursor-pointer"
                   }`}
                 >
                   <button
                     className={`w-full h-12 rounded-lg ${seatClass} transition-all duration-200 disabled:opacity-50 flex items-center justify-center transform hover:scale-105 active:scale-95 relative overflow-hidden`}
                     onClick={() => selectOrUnselectSeats(seatNumber + 1)}
-                    disabled={bus.seatsBooked.includes(seatNumber + 1)}
+                    disabled={bookedSeats?.includes(seatNumber + 1)}
                   >
                     {/* Seat Icon */}
                     <div className="absolute inset-0 flex items-center justify-center">

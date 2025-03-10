@@ -112,9 +112,10 @@ function AdminBuses() {
       sorter: (a, b) => a.to.localeCompare(b.to),
     },
     {
-      title: "Journey Date",
-      dataIndex: "journeyDate",
+      title: "Frequency",
+      dataIndex: "frequency",
       sorter: (a, b) => new Date(a.journeyDate) - new Date(b.journeyDate),
+      render: (frequency) => frequency.join(", "), // Converts ["Tue", "Fri", "Mon"] to "Tue, Fri, Mon"
     },
     {
       title: "Discount",
@@ -126,18 +127,17 @@ function AdminBuses() {
       title: "Status",
       dataIndex: "status",
       filters: [
-        { text: 'Completed', value: 'Completed' },
-        { text: 'Running', value: 'running' },
-        { text: 'Pending', value: 'Pending' },
+        { text: 'Non-AC', value: 'Non-AC' },
+        { text: 'AC', value: 'AC' },
       ],
       onFilter: (value, record) => record.status === value,
       render: (status) => {
         let className = '';
         switch(status) {
-          case 'Completed':
+          case 'Non-AC':
             className = 'text-red-500 bg-red-100 px-2 py-1 rounded';
             break;
-          case 'running':
+          case 'AC':
             className = 'text-yellow-500 bg-yellow-100 px-2 py-1 rounded';
             break;
           default:

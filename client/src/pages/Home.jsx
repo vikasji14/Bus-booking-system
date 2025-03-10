@@ -15,7 +15,6 @@ function Home() {
   const [filters, setFilters] = useState({});
   const [allBuses, setAllBuses] = useState([]);
   const [status, setStatus] = useState(false);
-
   const getBusesByFilter = useCallback(async () => {
     dispatch(ShowLoading());
     const from = filters.from;

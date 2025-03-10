@@ -1,28 +1,86 @@
 const Bus = require("../models/busModel");
+const moment = require("moment");
 
 // Add a new bus
+// const AddBus = async (req, res) => {
+//   try {
+//     const { offers } = req.body;
+//     const bus = new Bus({
+//       ...req.body,
+//       offers: offers || [],
+//     });
+//     if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
+//       return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
+//     }
+//     const existingBus = await Bus.findOne({ busNumber: req.body.busNumber });
+//     existingBus
+//       ? res.send({ message: "Bus already exists", success: false, data: null })
+//       : await bus.save();
+
+//     res.status(200).send({
+//       message: "Bus created successfully",
+//       success: true,
+//       data: bus,
+//     });
+//   } catch (error) {
+//     res.status(500).send({ success: false, message: error.message });
+//   }
+// };
+
+const daysMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const AddBus = async (req, res) => {
   try {
-    const { offers } = req.body;
+    const { busNumber, discountPercentage, offers, frequency } = req.body;
+
+    // Check if frequency contains only valid days
+    if (frequency) {
+      const isValidFrequency = frequency.every(day => daysMap.includes(day));
+      if (!isValidFrequency) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid frequency. Allowed values: Sun, Mon, Tue, Wed, Thu, Fri, Sat.",
+        });
+      }
+    }
+
+    // Validate discount percentage
+    if (discountPercentage !== undefined && (discountPercentage < 0 || discountPercentage > 100)) {
+      return res.status(400).send({
+        success: false,
+        message: "Discount percentage must be between 0 and 100.",
+      });
+    }
+
+    // Check if a bus with the same busNumber already exists
+    const existingBus = await Bus.findOne({ busNumber });
+    if (existingBus) {
+      return res.status(400).send({
+        success: false,
+        message: "Bus already exists.",
+        data: null,
+      });
+    }
+
+    // Create and save new bus entry
     const bus = new Bus({
       ...req.body,
       offers: offers || [],
     });
-    if (req.body.discountPercentage && (req.body.discountPercentage < 0 || req.body.discountPercentage > 100)) {
-      return res.status(400).send({ success: false, message: "Discount percentage must be between 0 and 100" });
-    }
-    const existingBus = await Bus.findOne({ busNumber: req.body.busNumber });
-    existingBus
-      ? res.send({ message: "Bus already exists", success: false, data: null })
-      : await bus.save();
 
-    res.status(200).send({
-      message: "Bus created successfully",
+    await bus.save();
+
+    res.status(201).send({
       success: true,
+      message: "Bus added successfully.",
       data: bus,
     });
   } catch (error) {
-    res.status(500).send({ success: false, message: error.message });
+    res.status(500).send({
+      success: false,
+      message: "Server error. Unable to add bus.",
+      error: error.message,
+    });
   }
 };
 
@@ -69,44 +127,101 @@ const GetAllBuses = async (req, res) => {
   }
 };
 
-// get all buses by from and to
+// // get all buses by from and to
+// const GetBusesByFromAndTo = async (req, res) => {
+//   try {
+//     const buses = await Bus.find({
+//       from: req.query.from,
+//       to: req.query.to,
+//       journeyDate: req.query.journeyDate,
+//     });
+
+//     buses.forEach(async (bus) => {
+//       const journey = new Date(bus.journeyDate);
+//       const departure = new Date(
+//         `${journey.getFullYear()}-${
+//           journey.getMonth() + 1
+//         }-${journey.getDate()} ${bus.departure}`
+//       );
+
+//       if (departure.getTime() - new Date().getTime() < 3600000) {
+//         await Bus.findByIdAndUpdate(bus._id, { status: "Completed" });
+//       }
+//     });
+
+//     const filteredBuses = buses.filter(
+//       (bus) => bus.status !== "Completed" && bus.status !== "Running"
+//     );
+//     res.status(200).send({
+//       message: "Buses fetched successfully",
+//       success: true,
+//       data: filteredBuses,
+//     });
+//   } catch (error) {
+//     res.status(500).send({
+//       message: "No Buses Found",
+//       success: false,
+//       data: error,
+//     });
+//   }
+// };
+
+
 const GetBusesByFromAndTo = async (req, res) => {
   try {
-    const buses = await Bus.find({
-      from: req.query.from,
-      to: req.query.to,
-      journeyDate: req.query.journeyDate,
+    const { from, to, journeyDate } = req.query;
+
+    // Validate query parameters
+    if (!from || !to || !journeyDate) {
+      return res.status(400).send({
+        message: "Please provide 'from', 'to', and 'journeyDate'",
+        success: false,
+      });
+    }
+
+    const searchDate = new Date(journeyDate);
+    const today = new Date();
+    const twoMonthsLater = new Date();
+    twoMonthsLater.setMonth(twoMonthsLater.getMonth() + 2);
+
+    // Validate journey date (should be within the next 2 months)
+    if (searchDate < today || searchDate > twoMonthsLater) {
+      return res.status(400).send({
+        message: "Journey date must be within the next 2 months.",
+        success: false,
+      });
+    }
+
+    const shortDay = daysMap[searchDate.getDay()]; // Convert date to weekday short form (e.g., Sun, Mon)
+
+    // Fetch buses that run on the selected day's frequency
+    let buses = await Bus.find({
+      from,
+      to,
+      frequency: shortDay, // Only fetch buses running on this day
     });
 
-    buses.forEach(async (bus) => {
-      const journey = new Date(bus.journeyDate);
-      const departure = new Date(
-        `${journey.getFullYear()}-${
-          journey.getMonth() + 1
-        }-${journey.getDate()} ${bus.departure}`
-      );
+    // Add journeyDate to each bus object
+    buses = buses.map(bus => ({
+      ...bus.toObject(), // Convert Mongoose object to plain JS object
+      journeyDate,
+    }));
 
-      if (departure.getTime() - new Date().getTime() < 3600000) {
-        await Bus.findByIdAndUpdate(bus._id, { status: "Completed" });
-      }
-    });
-
-    const filteredBuses = buses.filter(
-      (bus) => bus.status !== "Completed" && bus.status !== "Running"
-    );
     res.status(200).send({
       message: "Buses fetched successfully",
       success: true,
-      data: filteredBuses,
+      data: buses,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).send({
-      message: "No Buses Found",
+      message: "Error fetching buses",
       success: false,
-      data: error,
+      error: error.message,
     });
   }
 };
+
 
 // update a bus
 const UpdateBus = async (req, res) => {
@@ -175,14 +290,20 @@ const GetBusById = async (req, res) => {
 // all bus list
 const allBusList = async (req, res) => {
   try {
+    const today = moment().format("ddd"); // Get today's day in short format (e.g., "Mon", "Tue")
+    
     const buses = await Bus.find();
+    
+    // Filter buses that have today's day in their frequency array
+    const filteredBuses = buses.filter(bus => bus.frequency.includes(today));
+  
     res.status(200).json({
       message: "Buses fetched successfully",
       success: true,
-      data: buses,
+      data: filteredBuses,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message:"error" });
+    res.status(500).json({ success: false, message: "Error fetching buses" });
   }
 };
 

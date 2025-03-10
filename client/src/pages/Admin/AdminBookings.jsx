@@ -13,6 +13,7 @@ function AdminBookings() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -105,13 +106,16 @@ function AdminBookings() {
       sorter: (a, b) => a.busNumber.localeCompare(b.busNumber),
       align: 'center',
       width: 120,
-    },
-    {
-      title: 'Journey Date',
-      dataIndex: 'journeyDate',
-      render: (journeyDate) => moment(journeyDate).format('DD/MM/YYYY'),
-      sorter: (a, b) => new Date(a.journeyDate) - new Date(b.journeyDate),
-      align: 'center',
+    },{
+      title: "Journey Date",
+      dataIndex: "seats",
+      render: (seats) => {
+        if (!seats?.length) return "N/A";
+        return moment(seats[0]?.date, "DD-MMM-YYYY").format("DD/MM/YYYY");
+      },
+      sorter: (a, b) =>
+        new Date(a.seats?.[0]?.date) - new Date(b.seats?.[0]?.date),
+      align: "center",
       width: 150,
     },
     {
@@ -145,23 +149,31 @@ function AdminBookings() {
       dataIndex: 'address',
     },
     {
-      title: 'Seats',
-      dataIndex: 'seats',
-      render: (seats) => (
-        <div>
-          {seats.length > 3 ? (
-            <Tooltip title={seats.join(', ')}>
-              <span>
-                {seats.slice(0, 3).join(', ')} 
-                <button className="text-blue-500 hover:text-blue-700 ml-1">See more</button>
-              </span>
-            </Tooltip>
-          ) : (
-            seats.join(', ')
-          )}
-        </div>
-      ),
-      align: 'center',
+      title: "Seats",
+      dataIndex: "seats",
+      render: (seats) => {
+        if (!seats?.length) return "N/A";
+    
+        const visibleSeats = seats[0]?.seatNumbers?.slice(0, 3).join(", ");
+        const hiddenSeats = seats[0]?.seatNumbers?.slice(3).join(", ");
+        return (
+          <div>
+            {seats[0]?.seatNumbers?.length > 3 ? (
+              <Tooltip title={hiddenSeats}>
+                <span>
+                  {visibleSeats}
+                  <button className="text-blue-500 hover:text-blue-700 ml-1">
+                    See more
+                  </button>
+                </span>
+              </Tooltip>
+            ) : (
+              visibleSeats
+            )}
+          </div>
+        );
+      },
+      align: "center",
       width: 120,
     },
     {

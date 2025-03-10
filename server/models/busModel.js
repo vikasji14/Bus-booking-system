@@ -25,10 +25,7 @@ const busSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  journeyDate: {
-    type: String,
-    required: true,
-  },
+  
   capacity: {
     type: Number,
     required: true,
@@ -41,13 +38,20 @@ const busSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
-  status: {
-    type: String,
-    default: "Yet to start",
+  frequency: {
+    type: [String],
+    enum: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    default: []
   },
   discountPercentage: {
     type: Number,
     default: 0,
+  },
+  status: { 
+    type: [String], 
+    required: true, 
+    enum: ["AC", "Non-AC"],
+    default: ["Non-AC"]
   },
   offers: [
     {

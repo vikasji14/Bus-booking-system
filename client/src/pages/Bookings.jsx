@@ -21,7 +21,6 @@ function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
   const getBookings = useCallback(async () => {
     try {
       setLoading(true);
@@ -128,9 +127,13 @@ function Bookings() {
     },
     {
       title: "Journey Date",
-      dataIndex: "journeyDate",
-      render: (journeyDate) => moment(journeyDate).format("DD/MM/YYYY"),
-      sorter: (a, b) => new Date(a.journeyDate) - new Date(b.journeyDate),
+      dataIndex: "seats",
+      render: (seats) => {
+        if (!seats?.length) return "N/A";
+        return moment(seats[0].date, "DD-MMM-YYYY").format("DD/MM/YYYY");
+      },
+      sorter: (a, b) =>
+        new Date(a.seats?.[0]?.date) - new Date(b.seats?.[0]?.date),
       align: "center",
       width: 150,
     },
@@ -145,20 +148,28 @@ function Bookings() {
     {
       title: "Seats",
       dataIndex: "seats",
-      render: (seats) => (
-        <div>
-          {seats.length > 3 ? (
-            <Tooltip title={seats.join(', ')}>
-              <span>
-                {seats.slice(0, 3).join(', ')}
-                <button className="text-blue-500 hover:text-blue-700 ml-1">See more</button>
-              </span>
-            </Tooltip>
-          ) : (
-            seats.join(', ')
-          )}
-        </div>
-      ),
+      render: (seats) => {
+        if (!seats?.length) return "N/A";
+    
+        const visibleSeats = seats[0]?.seatNumbers?.slice(0, 3).join(", ");
+        const hiddenSeats = seats[0]?.seatNumbers?.slice(3).join(", ");
+        return (
+          <div>
+            {seats[0]?.seatNumbers?.length > 3 ? (
+              <Tooltip title={hiddenSeats}>
+                <span>
+                  {visibleSeats}
+                  <button className="text-blue-500 hover:text-blue-700 ml-1">
+                    See more
+                  </button>
+                </span>
+              </Tooltip>
+            ) : (
+              visibleSeats
+            )}
+          </div>
+        );
+      },
       align: "center",
       width: 120,
     },
@@ -193,7 +204,6 @@ function Bookings() {
     },
   ];
 
-  console.log("selectBooking", selectedBooking)
 
   const CancelBooking = async () => {
     try {
@@ -360,7 +370,7 @@ function Bookings() {
                   </h2>
                   <div className="space-y-2">
                     <p className="text-gray-600"><span className="font-medium">Name:</span> {selectedBooking?.user}</p>
-                    <p className="text-gray-600"><span className="font-medium">Seats:</span> {selectedBooking?.seats.join(', ')}</p>
+                    <p className="text-gray-600"><span className="font-medium">Seats:</span> {selectedBooking?.seats?.[0]?.seatNumbers?.join(', ')}</p>
                   </div>
                 </div>
                 <div className="">
@@ -371,7 +381,7 @@ function Bookings() {
                   <div className="space-y-2">
                     <p className="text-gray-600"><span className="font-medium">Bus:</span> {selectedBooking?.name}</p>
                     <p className="text-gray-600"><span className="font-medium">Bus Number:</span> {selectedBooking?.busNumber}</p>
-                    <p className="text-gray-600"><span className="font-medium">Date:</span> {moment(selectedBooking?.journeyDate).format('DD/MM/YYYY')}</p>
+                    <p className="text-gray-600"><span className="font-medium">Date:</span> {moment(selectedBooking?.seats?.[0]?.date).format('DD/MM/YYYY')}</p>
                     <p className="text-gray-600"><span className="font-medium">Time:</span> {moment(selectedBooking?.departure, 'HH:mm').format('hh:mm A')}</p>
                   </div>
                 </div>

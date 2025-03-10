@@ -26,15 +26,30 @@ let transporter = nodemailer.createTransport({
 const BookSeat = async (req, res) => {
   try {
     const newBooking = new Booking({
-      ...req.body, // spread operator to get all the data from the request body
+      ...req.body, // Keeping the original structure
       user: req.user.toString(),
+      seats: req.seats
     });
     const user = await User.findById(req.user.toString());
-    // res.json(user._id)
-    // await newBooking.save();  
-    const bus = await Bus.findById(req.bus.toString()); // get the bus from the request body
-    bus.seatsBooked = [...bus.seatsBooked, ...req.seats]; // add the booked seats to the bus seatsBooked array in the database
-
+    const bus = await Bus.findById(req.bus.toString()); // Ensure bus ID is a string
+    if (!bus) {
+      return res.status(404).json({ success: false, message: "Bus not found" });
+    }
+    const {date,seatNumbers} = req.seats[0]
+    // Find if the date already exists in seatsBooked
+    const existingDateEntry = bus.seatsBooked.find(
+      (entry) => entry.date === date
+    );
+    
+    if (existingDateEntry) {
+      // If date exists, update the seats array
+      existingDateEntry.seats.push(...seatNumbers);
+    } else {
+      // If date doesn't exist, create a new entry
+      bus.seatsBooked.push({ date, seats: seatNumbers });
+    }
+    // Save the updated bus details
+    bus.markModified("seatsBooked");
     await bus.save();
     // send email to user with the booking details
     let mailOptions = {
@@ -51,10 +66,10 @@ const BookSeat = async (req, res) => {
     
         <div style="background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); animation: scaleUp 1.5s ease-in-out;">
           <p style="margin: 5px 0; font-weight: bold; text-align: center; font-size: 24px;">${bus.name}</p>
-          <p><strong>📅 Journey Date:</strong> ${bus.journeyDate}</p>
+          <p><strong>📅 Journey Date:</strong> ${date}</p>
           <p><strong>⏰ Departure Time:</strong> ${moment(bus.departure, "HH:mm:ss").format("hh:mm A")}</p>
           <p><strong>🏁 Arrival Time:</strong> ${moment(bus.arrival, "HH:mm:ss").format("hh:mm A")}</p>
-          <p><strong>🎟️ Seat(s):</strong> ${req.seats.join(", ")}</p>
+          <p><strong>🎟️ Seat(s):</strong> ${seatNumbers.join(", ")}</p>
         </div>
     
         <p style="text-align: center; margin-top: 15px;">Thank you for choosing us! 😊</p>
@@ -86,8 +101,6 @@ const BookSeat = async (req, res) => {
       </div>
       `,
     };
-    
-    
     transporter.sendMail(mailOptions, (err, data) => {
       if (err) {
         console.log("Error Occurs", err);
@@ -231,12 +244,20 @@ const createOrder = async (req, res) => {
 const verifyPayment = async (req, res) => {
   try {
     const { paymentId, bookingDetails } = req.body;
+    console.log(bookingDetails);
     const payment = await instance.payments.fetch(paymentId);
-
+    const seatsData = [
+      {
+        date: bookingDetails.journeyDate,
+        seatNumbers: bookingDetails.seats, // seats already an array of numbers
+      },
+    ]
+    bookingDetails.seats = seatsData;
     if (payment.status === 'captured') {
       const newBooking = new Booking(bookingDetails);
+      console.log("newBooking verified payment", newBooking);
       await newBooking.save();
-
+      console.log("newBooking saved");
       BookSeat(newBooking);
       res.status(200).send({
         message: 'Booking successful',

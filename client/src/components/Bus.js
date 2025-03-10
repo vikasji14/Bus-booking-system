@@ -9,7 +9,23 @@ function Bus({ bus }) {
   const navigate = useNavigate();
   const discountedPrice = bus.price * (1 - (bus.discountPercentage || 0) / 100);
   const [showOffers, setShowOffers] = useState(false);
+  
 
+const getAvailableSeats = (bus) => {
+  // Convert 'YYYY-MM-DD' (journeyDate) to 'DD-MMM-YYYY' format for matching
+  const formattedDate = moment(bus?.journeyDate).format("DD-MMM-YYYY");
+  // Find the entry in seatsBooked where date matches
+  const bookedEntry = bus?.seatsBooked?.find(entry => entry.date === formattedDate);
+  // Get the number of booked seats (default to 0 if not found)
+  const bookedSeats = bookedEntry ? bookedEntry.seats.length : 0;
+
+  // Calculate available seats
+  return bus.capacity - bookedSeats;
+};
+
+
+  
+  // Example usage inside JSX  
   return (
     <div className="relative p-6 bg-white rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 max-w-lg min-w-[350px] w-full">
       {/* Journey Date */}
@@ -21,9 +37,9 @@ function Bus({ bus }) {
 
       {/* Bus Status Badge */}
       <div className="absolute -top-3 right-6">
-        <span className={`px-4 py-1 rounded-full text-sm font-medium ${bus.status === "Yet To Start"
-            ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
-            : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
+        <span className={`px-4 py-1 rounded-full text-sm font-medium ${bus.status === "Non-AC"
+          ? "bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
+          : "bg-red-50 text-red-700 border border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800"
           }`}>
           {bus.status}
         </span>
@@ -35,6 +51,16 @@ function Bus({ bus }) {
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-xl font-bold text-gray-800 dark:text-white">{bus.name}</h3>
+            {bus?.frequency?.length > 0 && (
+              <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-lg w-fit">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
+                  {bus.frequency.join(", ")}
+                </span>
+              </div>
+            )}
+
+
+
             <p className="text-sm text-gray-500 dark:text-gray-400">Bus No: {bus.busNumber}</p>
           </div>
           <div className="flex items-center space-x-1 bg-gray-50 px-2 py-1 rounded-lg dark:bg-gray-700">
@@ -111,7 +137,7 @@ function Bus({ bus }) {
               </svg>
               <span className="text-xs font-medium text-gray-600 dark:text-gray-300">{bus.capacity} seats</span>
               <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-medium rounded-full dark:bg-red-900/30 dark:text-red-300">
-                {bus.capacity - bus.seatsBooked.length} left
+                {getAvailableSeats(bus)} left
               </span>
             </div>
 
@@ -173,7 +199,7 @@ function Bus({ bus }) {
           className="w-full px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] dark:from-blue-500 dark:to-blue-600 dark:hover:from-blue-600 dark:hover:to-blue-700"
           onClick={() => {
             if (localStorage.getItem("user_id")) {
-              navigate(`/book-now/${bus._id}`);
+              navigate(`/book-now/${bus._id}?journeyDate=${moment(bus.journeyDate).format("DD-MMM-YYYY")}`);
             } else {
               navigate(`/login`);
             }

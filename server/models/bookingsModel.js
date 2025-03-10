@@ -12,10 +12,18 @@ const bookingSchema = new mongoose.Schema(
       ref: "users",
       require: true,
     },
-    seats: {
-      type: Array,
-      require: true,
-    },
+    seats: [
+      {
+        date: {
+          type: String, // Store date in "YYYY-MM-DD" format
+          required: true,
+        },
+        seatNumbers: {
+          type: [Number], // Store seat numbers as an array
+          required: true,
+        },
+      },
+    ],
     transactionId: {
       type: String,
       require: true,

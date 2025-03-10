@@ -52,7 +52,6 @@ function Index() {
           `${process.env.REACT_APP_SERVER_URL}/api/buses/1/allbuses`
         );
         setAllBuses(response.data.data);
-        console.log("All Buses:", response.data.data);
       } catch (error) {
         console.error("Error fetching buses:", error);
       }

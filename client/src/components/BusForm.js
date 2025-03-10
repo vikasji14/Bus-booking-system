@@ -4,6 +4,7 @@ import { Modal, Row, Form, Col, message, Input, Button, DatePicker, Select, Inpu
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { axiosInstance } from "../helpers/axiosInstance";
 import { HideLoading, ShowLoading } from "../redux/alertsSlice";
+import { Checkbox } from "antd";
 
 function BusForm({
   showBusForm,
@@ -98,151 +99,150 @@ function BusForm({
         className="pt-4"
       >
         <Row gutter={[24, 0]}>
-          <Col lg={24} xs={24}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Bus Name</span>}
-              name="name"
-              rules={[{ required: true, message: "Please enter bus name" }]}
-            >
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-                placeholder="Enter bus name"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={24} xs={24}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Bus Name</span>}
+      name="name"
+      rules={[{ required: true, message: "Please enter bus name" }]}
+    >
+      <input
+        type="text"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+        placeholder="Enter bus name"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={12} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Bus Number</span>}
-              name="busNumber"
-              rules={[{ required: true, message: "Please input bus number!" }]}
-            >
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-                placeholder="Enter bus number"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={12} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Bus Number</span>}
+      name="busNumber"
+      rules={[{ required: true, message: "Please input bus number!" }]}
+    >
+      <input
+        type="text"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+        placeholder="Enter bus number"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={12} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Capacity</span>}
-              name="capacity"
-              rules={[{ required: true, message: "Please input bus capacity!" }]}
-            >
-              <input
-                type="number"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-                placeholder="Enter capacity"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={12} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Capacity</span>}
+      name="capacity"
+      rules={[{ required: true, message: "Please input bus capacity!" }]}
+    >
+      <input
+        type="number"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+        placeholder="Enter capacity"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={12} xs={24}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">From</span>}
-              name="from"
-              rules={[{ required: true, message: "Please select departure city" }]}
-            >
-              <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
-                <option value="">Select departure city</option>
-                {cities.map((data, index) => (
-                  <option key={index} value={data.ville}>
-                    {data.ville}
-                  </option>
-                ))}
-              </select>
-            </Form.Item>
-          </Col>
+  <Col lg={12} xs={24}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">From</span>}
+      name="from"
+      rules={[{ required: true, message: "Please select departure city" }]}
+    >
+      <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+        <option value="">Select departure city</option>
+        {cities.map((data, index) => (
+          <option key={index} value={data.ville}>
+            {data.ville}
+          </option>
+        ))}
+      </select>
+    </Form.Item>
+  </Col>
 
-          <Col lg={12} xs={24}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">To</span>}
-              name="to"
-              rules={[{ required: true, message: "Please select destination city" }]}
-            >
-              <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
-                <option value="">Select destination city</option>
-                {cities.map((data, index) => (
-                  <option key={index} value={data.ville}>
-                    {data.ville}
-                  </option>
-                ))}
-              </select>
-            </Form.Item>
-          </Col>
+  <Col lg={12} xs={24}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">To</span>}
+      name="to"
+      rules={[{ required: true, message: "Please select destination city" }]}
+    >
+      <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
+        <option value="">Select destination city</option>
+        {cities.map((data, index) => (
+          <option key={index} value={data.ville}>
+            {data.ville}
+          </option>
+        ))}
+      </select>
+    </Form.Item>
+  </Col>
 
-          <Col lg={8} xs={24}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Journey Date</span>}
-              name="journeyDate"
-              rules={[{ required: true, message: "Please select journey date!" }]}
-            >
-              <input
-                min={new Date().toISOString().split("T")[0]}
-                type="date"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-              />
-            </Form.Item>
-          </Col>
+  {/* <Col lg={8} xs={24}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Journey Date</span>}
+      name="journeyDate"
+      rules={[{ required: true, message: "Please select journey date!" }]}
+    >
+      <input
+        min={new Date().toISOString().split("T")[0]}
+        type="date"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+      />
+    </Form.Item>
+  </Col> */}
 
-          <Col lg={8} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Departure Time</span>}
-              name="departure"
-              rules={[{ required: true, message: "Please select departure time!" }]}
-            >
-              <input
-                type="time"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={8} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Departure Time</span>}
+      name="departure"
+      rules={[{ required: true, message: "Please select departure time!" }]}
+    >
+      <input
+        type="time"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={8} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Arrival Time</span>}
-              name="arrival"
-              rules={[{ required: true, message: "Please select arrival time!" }]}
-            >
-              <input
-                type="time"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={8} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Arrival Time</span>}
+      name="arrival"
+      rules={[{ required: true, message: "Please select arrival time!" }]}
+    >
+      <input
+        type="time"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={8} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Price</span>}
-              name="price"
-              rules={[{ required: true, message: "Please input price!" }]}
-            >
-              <input
-                type="number"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-                placeholder="Enter price"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={8} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Price</span>}
+      name="price"
+      rules={[{ required: true, message: "Please input price!" }]}
+    >
+      <input
+        type="number"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+        placeholder="Enter price"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={8} xs={12}>
-            <Form.Item
-              label={<span className="text-gray-700 font-medium">Discount Percentage</span>}
-              name="discountPercentage"
-             
-            >
-              <input
-                type="number"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
-                placeholder="Enter discount percentage (0-100)"
-              />
-            </Form.Item>
-          </Col>
+  <Col lg={8} xs={12}>
+    <Form.Item
+      label={<span className="text-gray-700 font-medium">Discount Percentage</span>}
+      name="discountPercentage"
+    >
+      <input
+        type="number"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+        placeholder="Enter discount percentage (0-100)"
+      />
+    </Form.Item>
+  </Col>
 
-          <Col lg={8} xs={24}>
+  <Col lg={8} xs={24}>
             <Form.Item
               label={<span className="text-gray-700 font-medium">Status</span>}
               name="status"
@@ -250,36 +250,54 @@ function BusForm({
             >
               <select className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all appearance-none bg-white">
                 <option value="">Select status</option>
-                <option value="Yet To Start">Yet To Start</option>
-                <option value="running">Running</option>
-                <option value="Completed">Completed</option>
+                <option value="Non-AC">Non-AC</option>
+                <option value="AC">AC</option>
               </select>
             </Form.Item>
           </Col>
 
-          <Col lg={24} xs={24}>
-            <Form.Item label={<span className="text-gray-700 font-medium">Offers</span>}>
-              <Form.List name="offers">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field) => (
-                      <OfferInput key={field.key} {...field} remove={remove} />
-                    ))}
-                    <Button
-                      type="dashed"
-                      onClick={() => add()}
-                      block
-                      icon={<PlusOutlined />}
-                      className="mt-2"
-                    >
-                      Add Offer
-                    </Button>
-                  </>
-                )}
-              </Form.List>
-            </Form.Item>
+  <Col lg={24} xs={24}>
+    <Form.Item label={<span className="text-gray-700 font-medium">Offers</span>}>
+      <Form.List name="offers">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map((field) => (
+              <OfferInput key={field.key} {...field} remove={remove} />
+            ))}
+            <Button
+              type="dashed"
+              onClick={() => add()}
+              block
+              icon={<PlusOutlined />}
+              className="mt-2"
+            >
+              Add Offer
+            </Button>
+          </>
+        )}
+      </Form.List>
+    </Form.Item>
+  </Col>
+  <Col lg={24} xs={24}>
+  <Form.Item
+    label={<span className="text-gray-700 font-medium">Select Day</span>}
+    name="frequency"
+    rules={[{ required: true, message: "Please select at least one frequency!" }]}
+  >
+    <Checkbox.Group>
+      <Row className="flex flex-wrap w-full text-2xl">
+        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          <Col key={day} span={8}>
+            <Checkbox value={day}>{day}</Checkbox>
           </Col>
-        </Row>
+        ))}
+      </Row>
+    </Checkbox.Group>
+  </Form.Item>
+</Col>
+
+</Row>
+
 
         <div className="flex gap-4 justify-end mt-6">
           <button

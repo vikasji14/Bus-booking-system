@@ -10,6 +10,7 @@ import moment from "moment";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdModeStandby } from "react-icons/md";
 import Footer from "../components/Footer";
+import { useLocation } from "react-router-dom";
 
 function BookNow() {
   const navigate = useNavigate();
@@ -24,7 +25,10 @@ function BookNow() {
   const [mobileError, setMobileError] = useState('');
   const [addressError, setAddressError] = useState('');
   const [isMobileValid, setIsMobileValid] = useState(false);
-  // console.log("bus",bus)
+  
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const journeyDate = searchParams.get("journeyDate");
 
   useEffect(() => {
     const regex = /^[6-9]\d{9}$/;
@@ -79,6 +83,19 @@ function BookNow() {
     };
   }, []);
 
+  const getAvailableSeats = (bus, journeyDate) => {
+    // Find the seatsBooked object for the given date
+    const bookedEntry = bus?.seatsBooked?.find(entry => entry.date === journeyDate);
+  
+    // Get the number of booked seats (default to 0 if no entry found)
+    const bookedSeats = bookedEntry ? bookedEntry.seats.length : 0;
+  
+    // Calculate available seats
+    return bus?.capacity - bookedSeats;
+  };
+  
+  // Example usage inside JSX
+
   const handlePayment = async () => {
     if (!razorpayLoaded) {
       message.error('Payment system is still loading. Please wait...');
@@ -87,13 +104,11 @@ function BookNow() {
 
     try {
       dispatch(ShowLoading());
-      console.log('Initiating payment...');
 
       const response = await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/create-order`, {
         amount: (bus.price * (1 - (bus.discountPercentage || 0) / 100) * selectedSeats.length) * 100
       });
 
-      console.log('Order created:', response.data);
 
       const options = {
         key: 'rzp_test_sy54SSBzD8tp1c',
@@ -111,6 +126,7 @@ function BookNow() {
                 user: user,
                 seats: selectedSeats,
                 mobile: mobile,
+                journeyDate: journeyDate,
                 address: address,
                 transactionId: response.razorpay_payment_id
               }
@@ -131,7 +147,6 @@ function BookNow() {
         }
       };
 
-      console.log('Opening Razorpay checkout...');
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
@@ -255,7 +270,7 @@ function BookNow() {
                         </div>
                         <div className="flex flex-col gap-1" >
                           <span className="text-sm text-gray-500 dark:text-gray-400">Journey Date</span>
-                          <span className="text-lg font-medium text-gray-900 dark:text-gray-100">{bus.journeyDate}</span>
+                          <span className="text-lg font-medium text-gray-900 dark:text-gray-100">{journeyDate}</span>
                         </div>
                       </div>
 
@@ -311,7 +326,7 @@ function BookNow() {
                       <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-xl">
                         <p className="text-sm text-gray-500 dark:text-gray-400">Seats Left</p>
                         <p className="text-2xl font-semibold text-green-600 dark:text-green-400">
-                          {bus.capacity - bus.seatsBooked.length}
+                          {getAvailableSeats(bus, journeyDate)}
                         </p>
                       </div>
                     </div>
@@ -323,6 +338,7 @@ function BookNow() {
                           selectedSeats={selectedSeats}
                           setSelectedSeats={setSelectedSeats}
                           bus={bus}
+                          journeyDate={journeyDate}
                         />
                       </div>
                     </Col>
