@@ -7,7 +7,10 @@ import { HideLoading, ShowLoading } from "../redux/alertsSlice";
 import Bus from "../components/Bus";
 import Footer from '../components/Footer';
 import Partner from '../components/Partner';
-import { Row, Col, message, Button } from "antd";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Row, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 function Index() {
@@ -17,12 +20,14 @@ function Index() {
   const [filters, setFilters] = useState({});
   const [allBuses, setAllBuses] = useState([]);
   const [status, setStatus] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(6); // Show only 6 initially
+  const [visibleCount, setVisibleCount] = useState(3); // Show only 6 initially
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
+  console.log(cities)
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 1024); // lg breakpoint ke liye
+      setIsMobile(window.innerWidth < 500); // lg breakpoint ke liye
     };
 
     checkScreenSize();
@@ -53,7 +58,11 @@ function Index() {
 
   useEffect(() => {
     axiosInstance.get(`${process.env.REACT_APP_SERVER_URL}/api/cities/get-all-cities`).then((response) => {
-      setCities(response.data.data);
+      const filteredCities = response.data.data
+        .filter((city) => city.ville && city.ville.trim() !== "")
+        .map((city) => ({ value: city.ville, label: city.ville })); // Format for react-select
+
+      setCities(filteredCities);
     });
   }, []);
   useEffect(() => {
@@ -84,11 +93,11 @@ function Index() {
       </Helmet>
       <div className="w-full overflow-x-hidden">
 
-        <div className="flex flex-col-reverse md:flex-row bg-gray-900">
+        <div className="flex flex-col-reverse  bg-gray-900">
 
-          {(isMobile ? buses.length > 0 : true) && (
+          {(buses.length > 0) && (
             <div
-              className="hero lg:flex w-full lg:w-3/4"
+              className="hero lg:flex w-full"
               style={{
                 backgroundImage: `url("https://cdn.dribbble.com/users/1976094/screenshots/4687414/buss_trvl.gif")`,
                 backgroundSize: "cover",
@@ -108,7 +117,7 @@ function Index() {
                       )}
 
                       {buses.map((bus, index) => (
-                        <div key={index} className="w-screen p-10 w-full md:w-6/12">
+                        <div key={index} className="w-screen flex flex-row p-10  md:w-6/12 lg:w-4/12">
                           <Bus bus={bus} />
                         </div>
                       ))}
@@ -119,11 +128,11 @@ function Index() {
             </div>
           )}
 
-          <div className="hero-content text-center text-neutral-content">
-            <div className="max-w-md ">
-              <div className="flex justify-center">
+          <div className=" text-center text-neutral-content">
+            <div className="w-full mx-auto flex items-center flex-col">
+              <div className="flex justify-center mt-4">
                 <img
-                  className=" text-center w-20 h-20 rounded-full"
+                  className="text-center w-20 h-20 rounded-full"
                   src={logo}
                   alt="logo"
                 />
@@ -148,65 +157,52 @@ function Index() {
                 </span>
                 <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
               </Link>
-              <div className="w-full text-black my-5 mx-2 p-2 px-2 py-3 flex justify-center">
-                <div className="w-full" gutter={10} align="center">
-                  <Col lg={12} sm={24}>
-                    <select
-                      className="mb-5 select select-primary w-full max-w-xs"
-                      onChange={(e) => {
-                        setFilters({ ...filters, from: e.target.value });
-                      }}
-                    >
-                      <option value="">Your Location</option>
-                      {cities.map((data, index) => {
-                        return (
-                          <option key={index} value={data.ville}>
-                            {data.ville}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </Col>
-                  <Col lg={12} sm={24}>
-                    <select
-                      className="mb-5 select select-primary w-full max-w-xs"
-                      onChange={(e) => {
-                        setFilters({ ...filters, to: e.target.value });
-                      }}
-                    >
-                      <option value="">Destination</option>
-                      {cities.map((data, index) => {
-                        return (
-                          <option key={index} value={data.ville}>
-                            {data.ville}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </Col>
-                  <Col lg={24} sm={24}>
-                    <div className="relative w-full max-w-xs">
-                      {/* Label inside a bordered box */}
-                      <div className="absolute -top-1  left-0  text-black bg-white font-semibold px-2 rounded-md">
-                        Choose date of journey
-                      </div>
-
-                      {/* Date Input Field */}
-                      <input
-                        className="input input-bordered input-primary w-full max-w-xs mt-2 border-2 border-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                        min={new Date().toISOString().split("T")[0]}
-                        type="date"
-                        onChange={(e) => {
-                          setFilters({
-                            ...filters,
-                            journeyDate: e.target.value,
-                          });
+              <div>
+                <div className="w-full flex text-black mt-4 flex-col" align="center">
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-10 w-full">
+                    <div className="w-[300px] font-semibold">
+                      <Select
+                        options={cities}
+                        placeholder="Search your location..."
+                        isSearchable={true} // Enables search functionality
+                        onChange={(selectedOption) => {
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            from: selectedOption ? selectedOption.value : "",
+                          }));
                         }}
                       />
                     </div>
 
-                  </Col>
-                  <Col lg={24} sm={24}>
+                    <div className="w-[300px] font-semibold">
+                      <Select
+                        options={cities}
+                        placeholder="Search Destination..."
+                        isSearchable={true} // Enables search functionality
+                        onChange={(selectedOption) => {
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            to: selectedOption ? selectedOption.value : "",
+                          }));
+                        }}
+                      />
+                    </div>
+
+                    <div className="relative w-[300px] font-semibold">
+                      <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => {
+                          setSelectedDate(date);
+                          setFilters({ ...filters, journeyDate: date.toISOString().split("T")[0] });
+                        }}
+                        minDate={new Date()} // Disable past dates
+                        placeholderText="Select Journey Date" // Custom placeholder
+                        className="w-full border border-gray-300 rounded-md p-2 pl-10 focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
                     <div className="flex mt-4 justify-center gap-4">
                       <button
                         onClick={() => {
@@ -225,7 +221,8 @@ function Index() {
                         <span className="gap-5 absolute inset-0 border-2 border-blue-600 rounded-full"></span>
                       </button>
                     </div>
-                  </Col>
+                  </div>
+
                   <div className="flex justify-center gap-4 mt-5 w-full">
                     {buses.length === 0 && !status && (
                       <div className="text-center text-white text-2xl">
@@ -235,13 +232,14 @@ function Index() {
                     {
                       (status && buses.length === 0) && (
                         <div className="flex justify-center mx-auto mt-2 items-center">
-                          <p className="text-red-800 font-bold"> **No Bus Avaliable You Can try another Destination</p>
+                          <p className="text-red-800 font-bold"> **No buses are available for the selected route and destination.</p>
                         </div>
                       )
                     }
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
