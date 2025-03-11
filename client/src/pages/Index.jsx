@@ -18,7 +18,18 @@ function Index() {
   const [allBuses, setAllBuses] = useState([]);
   const [status, setStatus] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6); // Show only 6 initially
+  const [isMobile, setIsMobile] = useState(false);
 
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint ke liye
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
   const handleSeeMore = () => {
     setVisibleCount((prev) => prev + 6); // Load 6 more buses on click
   };
@@ -75,41 +86,38 @@ function Index() {
 
         <div className="flex flex-col-reverse md:flex-row bg-gray-900">
 
-          <div
-            className="hero hidden sm:block lg:flex w-full lg:w-3/4"
-            style={{
-              backgroundImage: `url("https://cdn.dribbble.com/users/1976094/screenshots/4687414/buss_trvl.gif")`,
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-            }}
-          >
-
-            <div className="flex items-center h-full w-full">
-
-              <div className="h-screen overflow-auto overflow-x-hidden">
-
-                <div className="bg-opacity-80">
-                  <Row gutter={[10, 10]}>
-                    {/* {
-                      buses.length != 0 && (
-                        <div className="flex opacity-80 justify-center mx-auto mt-2 items-center">
-                          <p className="text-black font-bold text-2xl underline"> {filters.from}  <span>{buses.length!=0 && "To" }</span> {filters.to}  {filters.journeyDate}</p>
+          {(isMobile ? buses.length > 0 : true) && (
+            <div
+              className="hero lg:flex w-full lg:w-3/4"
+              style={{
+                backgroundImage: `url("https://cdn.dribbble.com/users/1976094/screenshots/4687414/buss_trvl.gif")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center center",
+              }}
+            >
+              <div className="flex items-center h-full w-full">
+                <div className="h-screen overflow-auto overflow-x-hidden">
+                  <div className="bg-opacity-80">
+                    <Row gutter={[10, 10]}>
+                      {isMobile && buses.length !== 0 && (
+                        <div className="flex  opacity-80 justify-center mx-auto mt-2 items-center">
+                          <p className="text-black font-bold text-2xl">
+                            {filters.from} <span>To</span> {filters.to} All Buses
+                          </p>
                         </div>
-                      )
-                    } */}
+                      )}
 
-                    {buses.map((bus, index) => {
-                      return (
+                      {buses.map((bus, index) => (
                         <div key={index} className="w-screen p-10 w-full md:w-6/12">
                           <Bus bus={bus} />
                         </div>
-                      );
-                    })}
-                  </Row>
+                      ))}
+                    </Row>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="hero-content text-center text-neutral-content">
             <div className="max-w-md ">
