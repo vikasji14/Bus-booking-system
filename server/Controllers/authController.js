@@ -25,6 +25,51 @@ transporter.verify((error, success) => {
   }
 });
 
+
+//google login
+
+const googleLogin = async (req, res) => {
+  const { email, name, profile } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      existingUser.profile = profile;
+      await existingUser.save();
+      const token = jwt.sign(
+        { userId: existingUser._id },
+        process.env.jwt_secret,
+        { expiresIn: "1h" }
+      );
+      res.send({
+        message: "User logged in successfully",
+        success: true,
+        data: token,
+        user: existingUser,
+      });
+    } else {
+      const newUser = new User({ email, name, profile });
+      await newUser.save();
+      const token = jwt.sign(
+        { userId: newUser._id },
+        process.env.jwt_secret,
+        { expiresIn: "1h" }
+      );
+      res.send({
+        message: "User logged in successfully",
+        success: true,
+        data: token,
+        user: newUser,
+      });
+    }
+  } catch (error) {
+    res.send({
+      message: error.message,
+      success: false,
+      data: null,
+    });
+  }
+}
+
 // register new user
 
 const CreateUser = async (req, res) => {
@@ -347,4 +392,4 @@ const UpdatePassword = async (req, res) => {
     });
 };
 
-module.exports = { CreateUser, Login, ResetPassword, UpdatePassword };
+module.exports = { CreateUser, Login, googleLogin, ResetPassword, UpdatePassword };
