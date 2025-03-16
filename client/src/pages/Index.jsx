@@ -23,8 +23,6 @@ function Index() {
   const [visibleCount, setVisibleCount] = useState(3); // Show only 6 initially
   const [isMobile, setIsMobile] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-
-  console.log(cities)
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 500); // lg breakpoint ke liye
@@ -43,6 +41,9 @@ function Index() {
     const from = filters.from;
     const to = filters.to;
     const journeyDate = filters.journeyDate;
+    console.log("From", from)
+    console.log("To", to)
+    console.log("JourneyDate", journeyDate)
     try {
       const { data } = await axiosInstance.post(
         `${process.env.REACT_APP_SERVER_URL}/api/buses/get?from=${from}&to=${to}&journeyDate=${journeyDate}`
@@ -193,7 +194,8 @@ function Index() {
                         selected={selectedDate}
                         onChange={(date) => {
                           setSelectedDate(date);
-                          setFilters({ ...filters, journeyDate: date.toISOString().split("T")[0] });
+                          const localDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                          setFilters({ ...filters, journeyDate: localDate });
                         }}
                         minDate={new Date()} // Disable past dates
                         placeholderText="Select Journey Date" // Custom placeholder

@@ -232,7 +232,7 @@ const createOrder = async (req, res) => {
     const options = {
       amount: req.body.amount,
       currency: 'INR',
-      receipt: 'receipt_' + Date.now()
+      receipt: 'receipt_' + Date.now(),
     };
     const order = await instance.orders.create(options);
     res.status(200).send(order);

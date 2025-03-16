@@ -117,6 +117,16 @@ function BookNow() {
         name: 'Bus Booking System',
         description: 'Bus Ticket Booking',
         order_id: response.data.id,
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true, // Ensure UPI is enabled
+          wallet: true,
+          UPI: true,
+        },
+        upi: {
+          flow: 'intent',  // ✅ Enables apps like GPay, PhonePe, etc.
+        },
         handler: async function (response) {
           try {
             await axiosInstance.post(`${process.env.REACT_APP_SERVER_URL}/api/bookings/verify-payment`, {
