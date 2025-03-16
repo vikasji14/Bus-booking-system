@@ -5,11 +5,13 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/alertsSlice";
 import { Helmet } from "react-helmet";
+import GoogleLoginPage from "./GoogleLogin";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onFinish = async (values) => {
+    console.log("Received values of form: ", values);
     try {
       dispatch(ShowLoading());
       const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/login`, values, { withCredentials: true } );
@@ -202,7 +204,17 @@ function Login() {
                 <span className="absolute inset-0 border-2 border-blue-600 rounded-full"></span>
               </button>
             </div>
-            <p className="text-center text-base text-gray-600">
+            
+            <div className="flex items-center gap-2 mb-4">
+
+            <span className="flex-grow border-t border-gray-300"></span>
+              <span className="text-gray-900 font-bold ">or</span>
+              <span className="flex-grow border-t border-gray-300"></span>
+            </div>
+            <div>
+              <GoogleLoginPage/>
+            </div>
+            <p className="text-center text-base mt-4 text-gray-600">
               Don't have an account?{" "}
               <Link
                 to="/register"

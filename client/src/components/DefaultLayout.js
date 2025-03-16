@@ -13,6 +13,7 @@ function DefaultLayout({ children }) {
 
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  console.log(user);
 
   const menuHandler = () => {
     setShowMobileMenu(!showMobileMenu);
@@ -164,12 +165,9 @@ function DefaultLayout({ children }) {
         <div className="hidden md:flex text-white text-base items-center gap-2">
           <div className="relative">
             {/* User Icon */}
-            <div
-              className="w-14 h-14 flex items-center justify-center bg-slate-300 rounded-full cursor-pointer"
-              onClick={() => setShowDetails(!showDetails)}
-            >
-              <i className="ri-user-3-line text-xl text-gray-800"></i>
-            </div>
+            
+              {/* <i className="ri-user-3-line text-xl text-gray-800"></i> */}
+              <img  onClick={() => setShowDetails(!showDetails)} src={user?.profile} alt="User Profile" className="w-14 h-14 rounded-full" />
 
 
             {showDetails && (

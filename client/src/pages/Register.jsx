@@ -11,6 +11,7 @@ function Register() {
   const dispatch = useDispatch();
   const onFinish = async (values) => {
     // compare password and confirm password
+    console.log(values);  
     if (values.password !== values.confirmPassword) {
       message.error("Password and Confirm Password must be same");
       return;
